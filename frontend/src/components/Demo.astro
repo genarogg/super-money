@@ -1,0 +1,91 @@
+<section id="demo" class="max-w-5xl mx-auto px-6 py-20">
+  <h2 class="font-mono text-xs uppercase tracking-widest text-gray-400 mb-12">Demo interactiva</h2>
+
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <!-- Demo 1 -->
+    <div class="bg-white border border-violet-100 rounded-2xl p-8 shadow-sm">
+      <div class="font-mono text-xs text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-3 mb-6">
+        01 — USD · 2 decimales
+      </div>
+      <div class="code-block mb-6"><span class="tag">&lt;input</span> <span class="fn">type</span>=<span class="str">"money"</span>
+     <span class="fn">currency</span>=<span class="str">"USD"</span>
+     <span class="fn">decimals</span>=<span class="str">"2"</span> <span class="tag">/&gt;</span></div>
+      <div class="money-wrapper mb-4">
+        <span class="currency-tag">USD</span>
+        <input type="money" currency="USD" decimals="2" placeholder="0.00" id="demo1" />
+      </div>
+      <div class="flex justify-between items-center bg-violet-50 border border-violet-100 rounded-lg px-4 py-3 font-mono text-sm">
+        <span class="text-gray-400">Valor capturado</span>
+        <span class="text-violet-500 font-medium" id="out1">—</span>
+      </div>
+    </div>
+
+    <!-- Demo 2 -->
+    <div class="bg-white border border-violet-100 rounded-2xl p-8 shadow-sm">
+      <div class="font-mono text-xs text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-3 mb-6">
+        02 — EUR · sin decimales
+      </div>
+      <div class="code-block mb-6"><span class="tag">&lt;input</span> <span class="fn">type</span>=<span class="str">"money"</span>
+     <span class="fn">currency</span>=<span class="str">"EUR"</span>
+     <span class="fn">decimals</span>=<span class="str">"0"</span> <span class="tag">/&gt;</span></div>
+      <div class="money-wrapper mb-4">
+        <span class="currency-tag">EUR</span>
+        <input type="money" currency="EUR" decimals="0" placeholder="0" id="demo2" />
+      </div>
+      <div class="flex justify-between items-center bg-violet-50 border border-violet-100 rounded-lg px-4 py-3 font-mono text-sm">
+        <span class="text-gray-400">Valor capturado</span>
+        <span class="text-violet-500 font-medium" id="out2">—</span>
+      </div>
+    </div>
+
+    <!-- Demo 3 -->
+    <div class="bg-white border border-violet-100 rounded-2xl p-8 shadow-sm">
+      <div class="font-mono text-xs text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-3 mb-6">
+        03 — COP · min / max
+      </div>
+      <div class="code-block mb-6"><span class="tag">&lt;input</span> <span class="fn">type</span>=<span class="str">"money"</span>
+     <span class="fn">currency</span>=<span class="str">"COP"</span>
+     <span class="fn">min</span>=<span class="str">"100"</span>
+     <span class="fn">max</span>=<span class="str">"9999999"</span> <span class="tag">/&gt;</span></div>
+      <div class="money-wrapper mb-4">
+        <span class="currency-tag">COP</span>
+        <input type="money" currency="COP" decimals="2" min="100" max="9999999" placeholder="0.00" id="demo3" />
+      </div>
+      <div class="flex justify-between items-center bg-violet-50 border border-violet-100 rounded-lg px-4 py-3 font-mono text-sm">
+        <span class="text-gray-400">Valor capturado</span>
+        <span class="text-violet-500 font-medium" id="out3">—</span>
+      </div>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <span class="font-mono text-xs bg-emerald-50 border border-emerald-200 text-emerald-600 px-3 py-1 rounded-full">Borde verde si válido</span>
+        <span class="font-mono text-xs bg-rose-50 border border-rose-200 text-rose-500 px-3 py-1 rounded-full">Borde rojo si inválido</span>
+      </div>
+    </div>
+
+    <!-- Demo 4 -->
+    <div class="bg-white border border-violet-100 rounded-2xl p-8 shadow-sm">
+      <div class="font-mono text-xs text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-3 mb-6">
+        04 — toInteger / toDecimal
+      </div>
+      <div class="money-wrapper mb-4">
+        <span class="currency-tag">USD</span>
+        <input type="money" currency="USD" decimals="2" id="demo4" />
+      </div>
+      <div class="bg-violet-50 border border-violet-100 rounded-lg px-4 py-3 font-mono text-sm flex flex-col gap-2">
+        <div class="flex justify-between">
+          <span class="text-gray-400">Decimal <em class="opacity-50">(pantalla)</em></span>
+          <span class="text-violet-500 font-medium" id="util-decimal">—</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">Integer <em class="opacity-50">(BD)</em></span>
+          <span class="text-emerald-500 font-medium" id="util-integer">—</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">toDecimal(integer)</span>
+          <span class="text-violet-500 font-medium" id="util-back">—</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

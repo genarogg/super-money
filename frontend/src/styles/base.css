@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Ajusta este valor al tamaño de tu menú fijo */
+}
+
+/* Animaciones escalonadas */
+.delay-1 {
+  animation-delay: 0.1s;
+}
+.delay-2 {
+  animation-delay: 0.2s;
+}
+.delay-3 {
+  animation-delay: 0.3s;
+}
+.delay-4 {
+  animation-delay: 0.4s;
+}
+.delay-5 {
+  animation-delay: 0.5s;
+}
+
+/* Input money styles */
+input[type="money"] {
+  width: 100%;
+  background: #f8f7ff;
+  border: 1.5px solid #d4d2ff;
+  border-radius: 10px;
+  color: #1a1a2e;
+  font-family: "DM Mono", monospace;
+  font-size: 1.4rem;
+  font-weight: 500;
+  padding: 14px 18px;
+  text-align: right;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+input[type="money"]:focus {
+  border-color: #5b5bd6;
+  box-shadow: 0 0 0 3px rgba(91, 91, 214, 0.15);
+}
+input[type="money"].is-error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+input[type="money"].is-valid {
+  border-color: #10b981;
+}
+.money-wrapper {
+  position: relative;
+}
+.money-wrapper .currency-tag {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: "DM Mono", monospace;
+  font-size: 0.75rem;
+  color: #5b5bd6;
+  background: rgba(91, 91, 214, 0.1);
+  border: 1px solid rgba(91, 91, 214, 0.2);
+  border-radius: 5px;
+  padding: 2px 7px;
+  pointer-events: none;
+  letter-spacing: 0.04em;
+}
+.money-wrapper input[type="money"] {
+  padding-left: 70px;
+}
+
+/* Code block */
+.code-block {
+  background: #1a1a2e;
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-family: "DM Mono", monospace;
+  font-size: 0.82rem;
+  color: #a0a0c8;
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+}
+.code-block .tag {
+  color: #7c7cf0;
+}
+.code-block .str {
+  color: #10b981;
+}
+.code-block .fn {
+  color: #f59e0b;
+}
+.code-block .cmt {
+  color: #4a4a6a;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f3f2ff;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d2ff;
+  border-radius: 3px;
+}

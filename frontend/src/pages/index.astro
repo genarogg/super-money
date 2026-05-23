@@ -1,21 +1,27 @@
 ---
-
+import '../styles/base.css';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Install from '../components/Install.astro';
+import Demo from '../components/Demo.astro';
 ---
-
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
+   <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-  </head>
+    <title>super-money — input type="money" para la web</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+     
+    </style>
   <body>
-    <h1>Astro</h1>
-    <input type="money" />
+     <Nav />
+     <Hero />
+     <Install />
+     <Demo />
 
-    <script>
+    <script type="module" is:inline>
       import initMoneyInputs from '../func/inputMoney/index.ts';
       initMoneyInputs();
     </script>
