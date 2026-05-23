@@ -1,0 +1,52 @@
+---
+export interface Props {
+  tabs: Array<{
+    label: string;
+    code: string;
+  }>;
+}
+
+const { tabs } = Astro.props;
+---
+
+<div class="code-tabs">
+  <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+    {tabs.map((tab, i) => (
+      <button
+        class={`tab-button px-4 py-2 text-xs font-mono rounded-lg transition-all ${i === 0 ? 'active bg-violet-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+        data-tab-index={i}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+  <div class="code-block">
+    {tabs.map((tab, i) => (
+      <pre class={i === 0 ? 'block' : 'hidden'} data-tab-content={i}>{tab.code}</pre>
+    ))}
+  </div>
+</div>
+
+<script is:inline>
+  document.querySelectorAll('.code-tabs').forEach(tabsContainer => {
+    const buttons = tabsContainer.querySelectorAll('.tab-button');
+    const contents = tabsContainer.querySelectorAll('[data-tab-content]');
+
+    buttons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((btn, i) => {
+          btn.classList.toggle('active', i === index);
+          btn.classList.toggle('bg-violet-500', i === index);
+          btn.classList.toggle('text-white', i === index);
+          btn.classList.toggle('bg-gray-100', i !== index);
+          btn.classList.toggle('text-gray-500', i !== index);
+        });
+
+        contents.forEach((content, i) => {
+          content.classList.toggle('hidden', i !== index);
+          content.classList.toggle('block', i === index);
+        });
+      });
+    });
+  });
+</script>
