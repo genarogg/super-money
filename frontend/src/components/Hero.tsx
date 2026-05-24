@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-type BadgeColor = 'violet' | 'emerald' | 'amber' | 'rose';
+type BadgeColor = 'violet' | 'emerald' | 'amber' | 'sky' | 'rose';
 
 interface TechBadge {
   label: string;
@@ -8,15 +8,16 @@ interface TechBadge {
 }
 
 const TECH_BADGES: TechBadge[] = [
-  { label: 'decimal.js', color: 'violet' },
   { label: 'TypeScript', color: 'emerald' },
   { label: 'MutationObserver', color: 'amber' },
+  { label: '0 dependencias UI', color: 'sky' },
 ];
 
 const BADGE_STYLES: Record<BadgeColor, string> = {
   violet: 'bg-violet-50 border-violet-200 text-violet-600',
   emerald: 'bg-emerald-50 border-emerald-200 text-emerald-600',
   amber: 'bg-amber-50 border-amber-200 text-amber-600',
+  sky: 'bg-sky-50 border-sky-200 text-sky-600',
   rose: 'bg-rose-50 border-rose-200 text-rose-600',
 };
 
@@ -50,7 +51,7 @@ export default function Hero() {
       <div className="relative z-10 mb-8">
         <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase font-medium text-violet-600 bg-violet-50 border border-violet-200 rounded-full px-4 py-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
-          powered by decimal.js · sin errores de float
+          store as integer · display as decimal
         </span>
       </div>
 

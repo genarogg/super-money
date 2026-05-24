@@ -4,7 +4,7 @@ const codeExamples: any[] = [
   {
     label: 'HTML',
     code: `<!-- Instalar -->
-<script src="https://unpkg.com/super-money@latest/dist/index.umd.js"></script>
+<script src="https://unpkg.com/supermoney@latest/dist/index.umd.js"></script>
 
 <!-- Inicializar -->
 <script>
@@ -14,11 +14,11 @@ const codeExamples: any[] = [
   {
     label: 'React',
     code: `// Instalar
-pnpm add super-money
+pnpm add supermoney
 
 // En tu App.jsx / main.jsx
 import { useEffect } from 'react';
-import initMoneyInputs from 'super-money';
+import initMoneyInputs from 'supermoney';
 
 function App() {
   useEffect(() => {
@@ -31,11 +31,11 @@ function App() {
   {
     label: 'Vue',
     code: `// Instalar
-pnpm add super-money
+pnpm add supermoney
 
 // En tu main.js / App.vue
 import { onMounted } from 'vue';
-import initMoneyInputs from 'super-money';
+import initMoneyInputs from 'supermoney';
 
 onMounted(() => {
   initMoneyInputs();
@@ -44,13 +44,13 @@ onMounted(() => {
   {
     label: 'Next.js',
     code: `// Instalar
-pnpm add super-money
+pnpm add supermoney
 
 // En tu layout.js / page.js
 'use client';
 
 import { useEffect } from 'react';
-import initMoneyInputs from 'super-money';
+import initMoneyInputs from 'supermoney';
 
 export default function RootLayout({ children }) {
   useEffect(() => {
@@ -63,11 +63,11 @@ export default function RootLayout({ children }) {
   {
     label: 'Astro',
     code: `// Instalar
-pnpm add super-money
+pnpm add supermoney
 
 // En tu layout.astro / index.astro
 ---
-import initMoneyInputs from 'super-money';
+import initMoneyInputs from 'supermoney';
 ---
 
 <script is:inline>
@@ -89,7 +89,7 @@ export default function Install() {
           <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm mb-4">
             <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest mb-4">1. Instalar la librería</h3>
             <div className="code-block bg-slate-950 text-white rounded-2xl px-4 py-3 font-mono text-sm">
-              <span className="font-semibold">pnpm</span> add <span className="text-emerald-400">super-money</span>
+              <span className="font-semibold">pnpm</span> add <span className="text-emerald-400">supermoney</span>
             </div>
           </div>
 
