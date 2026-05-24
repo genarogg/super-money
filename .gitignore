@@ -1,8 +1,4 @@
-backend/
-docs/
-global/
-lib/
-prompts/
+
 # build output
 dist/
 .next/

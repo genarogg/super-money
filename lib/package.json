@@ -1,0 +1,23 @@
+{
+  "name": "nombre_proyecto",
+  "version": "1.0.1",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "private": false,
+  "files": [
+    "dist",
+    "../frontend/src/types/html.d.ts",
+    "../frontend/src/types/astro-jsx-augment.d.ts"
+  ],
+  "scripts": {
+    "publicar": "node scripts/index.js",
+    "build": "tsup --config tsup.config.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "tsup": "^8.5.1"
+  }
+}
