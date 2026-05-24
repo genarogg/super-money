@@ -1,11 +1,12 @@
 {
-  "name": "nombre_proyecto",
+  "name": "supermoney",
   "version": "1.0.1",
-  "description": "",
-  "license": "ISC",
+  "description": "Input de dinero para la web. Modo ATM. Sin errores de punto flotante.",
+  "license": "MIT",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "private": false,
   "files": [
     "dist",
@@ -17,7 +18,7 @@
     "build": "tsup --config tsup.config.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
+  "devDependencies": {
     "tsup": "^8.5.1"
   }
 }
