@@ -1,6 +1,6 @@
 {
   "name": "supermoney",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Input de dinero para la web. Modo ATM. Sin errores de punto flotante.",
   "license": "MIT",
   "author": "",

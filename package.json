@@ -15,14 +15,12 @@
   ],
   "scripts": {
     "dev": "turbo run dev --parallel",
-    "dex": "pnpm prismaInit && turbo run dev --parallel",
-    "build": "pnpm run sync:env && turbo run build --filter=frontend",
+    "build": "turbo run build --filter=frontend",
     "start": "turbo run start",
-   
     "-----lib-----": "-----------------------------------------",
     "publicar": "cd lib && pnpm run publicar",
     "-----Global-----": "-----------------------------------------",
-    "clean:install": "node ./global/clean.js && pnpm install && pnpm run sync:global && pnpm run sync:env"
+    "clean:install": "node ./global/clean.js && pnpm install"
   },
   "dependencies": {
     "turbo": "^2.7.2"
