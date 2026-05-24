@@ -3,6 +3,7 @@ import Hero from './components/Hero';
 import Install from './components/Install';
 import Nav from './components/Nav';
 import Demo from './components/Demo';
+import Footer from './components/Footer';
 import initMoneyInputs from './func/inputMoney';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Install />
         <Demo />
       </main>
+      <Footer />
     </div>
   );
 }

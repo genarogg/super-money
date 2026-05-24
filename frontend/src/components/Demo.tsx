@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { Clock, Terminal, TerminalSquare, Code2, ArrowRightLeft } from 'lucide-react';
 import initMoneyInputs from '../func/inputMoney';
+import { showMoney } from '../func/math';
 
 export default function Demo() {
   const [storeValue, setStoreValue] = useState<number>(0);
@@ -66,39 +68,23 @@ export default function Demo() {
               <input
                 ref={inputRef}
                 type="money"
-                currency="USD"
-                decimals="2"
                 placeholder="0.00"
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 text-2xl font-mono text-gray-900 outline-none focus:border-violet-400 focus:ring-4 focus:ring-violet-100 transition-all"
               />
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-white rounded-2xl border border-emerald-100 p-6 shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-emerald-600"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
+<Clock className="w-5 h-5 text-emerald-600" />
                 </div>
                 <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest">
                   Store (integer)
                 </h3>
               </div>
-              <p className="text-3xl font-mono font-bold text-emerald-600">
+              <p className="text-2xl sm:text-3xl font-mono font-bold text-emerald-600 break-all">
                 {storeValue}
               </p>
               <p className="text-xs font-mono text-gray-400 mt-2">
@@ -109,53 +95,72 @@ export default function Demo() {
             <div className="bg-white rounded-2xl border border-violet-100 p-6 shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-violet-600"
-                  >
-                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                    <line x1="9" x2="15" y1="9" y2="15" />
-                    <line x1="15" x2="15" y1="9" y2="9" />
-                  </svg>
+<TerminalSquare className="w-5 h-5 text-violet-600" />
                 </div>
                 <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest">
                   Display (decimal)
                 </h3>
               </div>
-              <p className="text-3xl font-mono font-bold text-violet-600">
+              <p className="text-2xl sm:text-3xl font-mono font-bold text-violet-600 break-all">
                 {displayValue}
               </p>
               <p className="text-xs font-mono text-gray-400 mt-2">
                 Valor para el usuario
               </p>
             </div>
+
+            <div className="bg-white rounded-2xl border border-indigo-100 p-6 shadow-lg">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
+<Terminal className="w-5 h-5 text-indigo-600" />
+                </div>
+                <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest">
+                  showMoney()
+                </h3>
+              </div>
+              <p className="text-2xl sm:text-3xl font-mono font-bold text-indigo-600 break-all">
+                {showMoney(storeValue, 2, '$')}
+              </p>
+              <p className="text-xs font-mono text-gray-400 mt-2">
+                Valor formateado
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+<Code2 className="w-5 h-5 text-gray-600" />
+              </div>
+              <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest">
+                Uso de showMoney
+              </h3>
+            </div>
+            <div className="bg-gray-900 rounded-xl p-4 font-mono text-sm text-gray-300">
+              <p className="mb-2">
+                <span className="text-gray-500">// Valor entero (storeValue</span>
+              </p>
+              <p className="mb-4">
+                <span className="text-pink-400">const</span> integer = <span className="text-amber-400">{storeValue}</span>;
+              </p>
+              <p className="mb-2">
+                <span className="text-gray-500">// showMoney(integer, decimals, symbol)</span>
+              </p>
+              <p>
+                <span className="text-purple-400">showMoney</span>(<span className="text-amber-400">{storeValue}</span>, <span className="text-amber-400">2</span>, <span className="text-emerald-400">'$'</span>)
+              </p>
+              <p className="mt-4">
+                <span className="text-gray-500">// Resultado</span>
+              </p>
+              <p>
+                <span className="text-emerald-400">'{showMoney(storeValue, 2, '$')}'</span>
+              </p>
+            </div>
           </div>
 
           <div className="bg-gradient-to-r from-violet-500 to-indigo-500 rounded-2xl p-6 text-white">
             <div className="flex items-center gap-3 mb-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 16 16 12 12 8" />
-                <line x1="8" x2="16" y1="12" y2="12" />
-              </svg>
+<ArrowRightLeft className="w-5 h-5" />
               <h3 className="font-mono text-sm uppercase tracking-widest opacity-80">
                 ¿Cómo funciona?
               </h3>

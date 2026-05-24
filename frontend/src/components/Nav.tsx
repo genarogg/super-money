@@ -10,12 +10,7 @@ export default function Nav() {
           <a href="#demo" className="hover:text-violet-500 transition-colors">
             demo
           </a>
-          <a href="#api" className="hover:text-violet-500 transition-colors">
-            api
-          </a>
-          <a href="#utils" className="hover:text-violet-500 transition-colors">
-            utils
-          </a>
+         
         </div>
       </div>
     </nav>
