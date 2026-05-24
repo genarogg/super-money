@@ -1,6 +1,6 @@
 {
   "name": "supermoney",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Input de dinero para la web. Modo ATM. Sin errores de punto flotante.",
   "license": "MIT",
   "author": "",
@@ -11,7 +11,8 @@
   "files": [
     "dist",
     "../frontend/src/types/html.d.ts",
-    "../frontend/src/types/astro-jsx-augment.d.ts"
+    "../frontend/src/types/astro-jsx-augment.d.ts",
+    "README.md"
   ],
   "scripts": {
     "publicar": "node scripts/index.js",
