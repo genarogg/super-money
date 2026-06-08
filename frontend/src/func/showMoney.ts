@@ -1,6 +1,6 @@
 
 import centsToDisplay from './inputMoney/centsToDisplay';
-import { getMoneyConfig } from './moneyConfig.ts';
+import { getMoneyConfig } from './moneyConfig';
  
 /**
  * Muestra un valor decimal como cadena de dinero formateada.
