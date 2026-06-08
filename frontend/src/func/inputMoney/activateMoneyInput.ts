@@ -1,5 +1,9 @@
 import centsToDisplay from './centsToDisplay';
 
+interface MoneyInputElement extends HTMLInputElement {
+    setCents: (newCents: number, triggerEvent?: boolean) => void;
+}
+
 const activateMoneyInput = (input: HTMLInputElement): void => {
     if (input.getAttribute('type') !== 'money') return;
     if (input.dataset.moneyInit) return;
@@ -53,7 +57,7 @@ const activateMoneyInput = (input: HTMLInputElement): void => {
         render(triggerEvent);
     };
 
-    (input as any).setCents = setCents;
+    (input as MoneyInputElement).setCents = setCents;
 
     input.addEventListener('keydown', (e: KeyboardEvent) => {
         if (['e', 'E', '+', '-', '.'].includes(e.key)) {
@@ -153,7 +157,8 @@ const activateMoneyInput = (input: HTMLInputElement): void => {
         const selStart = input.selectionStart ?? input.value.length;
         const selEnd   = input.selectionEnd   ?? input.value.length;
 
-        const pasted = (e.clipboardData || (window as any).clipboardData).getData('text') as string;
+        const clipboardData = e.clipboardData ?? (window as Window & { clipboardData?: DataTransfer }).clipboardData;
+        const pasted = clipboardData?.getData('text') ?? '';
         const pastedDigits = pasted.replace(/\D/g, '');
         if (!pastedDigits) return;
 

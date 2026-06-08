@@ -13,6 +13,6 @@ import centsToDisplay from './inputMoney/centsToDisplay';
  */
 export const showMoney = (value: number, decimals: number = 2, symbol?: string): string => {
     const formatted = centsToDisplay(value, decimals);
-    return symbol ? `${symbol} ${formatted}` : formatted;
+    return symbol ? `${formatted} ${symbol}` : formatted;
 };
 

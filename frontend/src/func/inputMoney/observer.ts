@@ -6,7 +6,7 @@ const initMoneyInputs = () => {
 
     const observer = new MutationObserver((mutations: MutationRecord[]) => {
         for (const mutation of mutations) {
-            for (const node of mutation.addedNodes) {
+            for (const node of Array.from(mutation.addedNodes)) {
                 if (node.nodeType !== 1) continue;
                 const el = node as Element;
                 if (el.matches('input[type="money"]')) activateMoneyInput(el as HTMLInputElement);
