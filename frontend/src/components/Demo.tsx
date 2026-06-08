@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Clock, Terminal, TerminalSquare, Code2, ArrowRightLeft } from 'lucide-react';
 import initMoneyInputs from '../func/inputMoney';
-import { showMoney } from '../func/math';
+import { showMoney } from '../func/showMoney';
 
 export default function Demo() {
   const [storeValue, setStoreValue] = useState<number>(0);
