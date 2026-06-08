@@ -8,4 +8,20 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: true,
+   
+    hmr: {
+      overlay: false
+    }
+  },
+
+  preview: {
+    host: '0.0.0.0',
+    allowedHosts: true,
+   
+
+  },
 })
