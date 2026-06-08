@@ -9,7 +9,7 @@ export default function Demo() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    initMoneyInputs();
+    initMoneyInputs({ symbol: '$', decimals: 2 });
 
     const input = inputRef.current;
     if (!input) return;
@@ -78,7 +78,7 @@ export default function Demo() {
             <div className="bg-white rounded-2xl border border-emerald-100 p-6 shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
-<Clock className="w-5 h-5 text-emerald-600" />
+                  <Clock className="w-5 h-5 text-emerald-600" />
                 </div>
                 <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest">
                   Store (integer)
@@ -95,7 +95,7 @@ export default function Demo() {
             <div className="bg-white rounded-2xl border border-violet-100 p-6 shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center">
-<TerminalSquare className="w-5 h-5 text-violet-600" />
+                  <TerminalSquare className="w-5 h-5 text-violet-600" />
                 </div>
                 <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest">
                   Display (decimal)
@@ -112,7 +112,7 @@ export default function Demo() {
             <div className="bg-white rounded-2xl border border-indigo-100 p-6 shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
-<Terminal className="w-5 h-5 text-indigo-600" />
+                  <Terminal className="w-5 h-5 text-indigo-600" />
                 </div>
                 <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest">
                   showMoney()
@@ -130,37 +130,52 @@ export default function Demo() {
           <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-<Code2 className="w-5 h-5 text-gray-600" />
+                <Code2 className="w-5 h-5 text-gray-600" />
               </div>
               <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest">
                 Uso de showMoney
               </h3>
             </div>
-            <div className="bg-gray-900 rounded-xl p-4 font-mono text-sm text-gray-300">
-              <p className="mb-2">
-                <span className="text-gray-500">// Valor entero (storeValue</span>
-              </p>
-              <p className="mb-4">
-                <span className="text-pink-400">const</span> integer = <span className="text-amber-400">{storeValue}</span>;
-              </p>
-              <p className="mb-2">
-                <span className="text-gray-500">// showMoney(integer, decimals, symbol)</span>
+            <div className="bg-gray-900 rounded-xl p-4 font-mono text-sm text-gray-300 leading-7">
+              <p>
+                <span className="text-gray-500">{'// showMoney(valor, decimals?, symbol?)'}</span>
               </p>
               <p>
-                <span className="text-purple-400">showMoney</span>(<span className="text-amber-400">{storeValue}</span>, <span className="text-amber-400">2</span>, <span className="text-emerald-400">'$'</span>)
+                <span className="text-gray-500">{'// Los parámetros opcionales sobreescriben la config global'}</span>
               </p>
-              <p className="mt-4">
-                <span className="text-gray-500">// Resultado</span>
+              <br />
+              <p>
+                <span className="text-gray-500">{'// Valor entero en store (cents)'}</span>
               </p>
               <p>
-                <span className="text-emerald-400">'{showMoney(storeValue, 2, '$')}'</span>
+                <span className="text-pink-400">const</span>{' integer = '}
+                <span className="text-amber-400">{storeValue}</span>;
+              </p>
+              <br />
+              <p>
+                <span className="text-purple-400">showMoney</span>
+                {'('}
+                <span className="text-amber-400">{storeValue}</span>
+                {')'}
+                <span className="text-gray-500">{`  // → "${showMoney(storeValue)}"  (usa config global)`}</span>
+              </p>
+              <p>
+                <span className="text-purple-400">showMoney</span>
+                {'('}
+                <span className="text-amber-400">{storeValue}</span>
+                {', '}
+                <span className="text-amber-400">2</span>
+                {', '}
+                <span className="text-emerald-400">'$'</span>
+                {')'}
+                <span className="text-gray-500">{`  // → "${showMoney(storeValue, 2, '$')}"`}</span>
               </p>
             </div>
           </div>
 
           <div className="bg-gradient-to-r from-violet-500 to-indigo-500 rounded-2xl p-6 text-white">
             <div className="flex items-center gap-3 mb-3">
-<ArrowRightLeft className="w-5 h-5" />
+              <ArrowRightLeft className="w-5 h-5" />
               <h3 className="font-mono text-sm uppercase tracking-widest opacity-80">
                 ¿Cómo funciona?
               </h3>
