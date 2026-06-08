@@ -1,4 +1,5 @@
 import centsToDisplay from './centsToDisplay';
+import { getMoneyConfig } from '../moneyConfig';
 
 interface MoneyInputElement extends HTMLInputElement {
     setCents: (newCents: number, triggerEvent?: boolean) => void;
@@ -9,7 +10,11 @@ const activateMoneyInput = (input: HTMLInputElement): void => {
     if (input.dataset.moneyInit) return;
     input.dataset.moneyInit = 'true';
 
-    const decimals = parseInt(input.getAttribute('decimals') ?? '2');
+    // El atributo `decimals` en el HTML tiene prioridad; si no está, usa la config global
+    const decimals = input.hasAttribute('decimals')
+        ? parseInt(input.getAttribute('decimals')!)
+        : getMoneyConfig().decimals;
+
     const min: number | null = input.hasAttribute('min') ? parseInt(input.getAttribute('min')!) : null;
     const max: number | null = input.hasAttribute('max') ? parseInt(input.getAttribute('max')!) : null;
 

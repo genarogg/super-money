@@ -1,6 +1,9 @@
 import activateMoneyInput from './activateMoneyInput';
+import { setMoneyConfig, type MoneyConfig } from '../moneyConfig';
 
-const initMoneyInputs = () => {
+const initMoneyInputs = (config?: MoneyConfig): void => {
+    if (config) setMoneyConfig(config);
+
     document.querySelectorAll<HTMLInputElement>('input[type="money"]')
         .forEach(activateMoneyInput);
 
