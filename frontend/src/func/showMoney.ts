@@ -11,12 +11,11 @@ import { getMoneyConfig } from './moneyConfig.ts';
  * @param decimals - Número de decimales (override; usa el global si se omite)
  * @returns        - Cadena formateada, ej: "1,234.56 Bs."
  */
-export const showMoney = (value: number, symbol?: string, decimals?: number): string => {
+export const showMoney = (value: number, decimals?: number, symbol?: string): string => {
     const cfg = getMoneyConfig();
     const resolvedDecimals = decimals ?? cfg.decimals;
     const resolvedSymbol   = symbol  ?? cfg.symbol;
- 
+
     const formatted = centsToDisplay(value, resolvedDecimals);
     return resolvedSymbol ? `${formatted} ${resolvedSymbol}` : formatted;
 };
- 
