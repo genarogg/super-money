@@ -31,21 +31,28 @@ const activateMoneyInput = (input: HTMLInputElement): void => {
         return digitCount;
     };
 
-    const cursorPosToVisualPos = (digitPos: number): number => {
-        const formatted = input.value;
+    const cursorPosToVisualPos = (formatted: string, digitPos: number): number => {
         let digitCount = 0;
         for (let i = 0; i < formatted.length; i++) {
-            if (digitCount === digitPos) return i;
+            if (digitCount === digitPos) {
+                // Saltar separadores (punto decimal o coma de miles) que estén justo aquí
+                let pos = i;
+                while (pos < formatted.length && (formatted[pos] === '.' || formatted[pos] === ',')) {
+                    pos++;
+                }
+                return pos;
+            }
             if (formatted[i] >= '0' && formatted[i] <= '9') digitCount++;
         }
         return formatted.length;
     };
 
     const render = (triggerEvent: boolean, keepDigitCursor?: number): void => {
-        input.value = centsToDisplay(cents, decimals);
+        const newFormatted = centsToDisplay(cents, decimals);
+        input.value = newFormatted;
 
         if (keepDigitCursor !== undefined) {
-            const newVisualPos = cursorPosToVisualPos(keepDigitCursor);
+            const newVisualPos = cursorPosToVisualPos(newFormatted, keepDigitCursor);
             input.setSelectionRange(newVisualPos, newVisualPos);
         }
 
@@ -111,13 +118,21 @@ const activateMoneyInput = (input: HTMLInputElement): void => {
                     const leftOfCursor = digits.slice(0, dPos);
                     const onlyZerosLeft = leftOfCursor.every(d => d === '0');
                     if (digits[dPos - 1] === '0' && onlyZerosLeft) {
-                        render(false, dPos + 1);
+                        render(false, dPos);
                     } else {
+                        // ¿Estamos borrando en la zona decimal?
+                        // Los últimos `decimals` dígitos del array son decimales.
+                        // dPos-1 es el índice del dígito que se borra.
+                        const decimalStartDigit = digits.length - decimals;
+                        const inDecimalZone = (dPos - 1) >= decimalStartDigit;
+
                         digits.splice(dPos - 1, 1);
                         cents = parseInt(digits.join('')) || 0;
-                        const leftDigits = digits.slice(0, dPos - 1);
-                        const hasSignificantLeft = leftDigits.some(d => d !== '0');
-                        render(true, hasSignificantLeft ? dPos - 1 : dPos);
+
+                        // En zona decimal el cursor NO retrocede (el dígito borrado
+                        // se desplaza hacia la derecha, no desaparece visualmente).
+                        // En zona entera sí retrocede.
+                        render(true, inDecimalZone ? dPos : dPos - 1);
                     }
                 }
             }
