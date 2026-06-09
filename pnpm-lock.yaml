@@ -26,6 +26,9 @@ importers:
       react-dom:
         specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
+      supermoney:
+        specifier: workspace:^
+        version: link:../lib
     devDependencies:
       '@babel/core':
         specifier: ^7.29.0
