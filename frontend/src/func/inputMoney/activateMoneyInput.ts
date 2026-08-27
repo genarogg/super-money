@@ -178,10 +178,23 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
     });
 
     input.addEventListener('input', () => {
-        const onlyDigits = input.value.replace(/\D/g, '');
-        if (onlyDigits !== input.value) {
-            input.value = centsToDisplay(cents, decimals);
-        }
+        // Si el value nunca se apartó de lo que ya sabíamos, no hay nada
+        // que reconciliar (evita trabajo/eventos de más).
+        const rawValue = input.value;
+        const onlyDigits = rawValue.replace(/\D/g, '');
+        if (onlyDigits === String(cents)) return;
+
+        // El navegador ya insertó/borró algo fuera de nuestro control de
+        // teclado (típico de teclados virtuales/IME en Android, donde el
+        // keydown no llega o no trae info útil). En vez de descartar el
+        // cambio, lo adoptamos: todos los dígitos presentes se reinterpretan
+        // como el nuevo monto, igual que hace la rama de "tecla numérica"
+        // del handler de keydown.
+        const caret = input.selectionStart ?? rawValue.length;
+        const digitPos = visualPosToCursorPos(caret);
+
+        cents = parseInt(onlyDigits, 10) || 0;
+        render(true, digitPos);
     });
 
     input.addEventListener('paste', (e: ClipboardEvent) => {
