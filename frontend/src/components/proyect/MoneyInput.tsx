@@ -14,10 +14,14 @@ const ensureGlobalInit = (config?: MoneyConfig) => {
 // ─── Props ────────────────────────────────────────────────────────────────────
 export interface MoneyInputProps
     extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value' | 'type' | 'onBlur'> {
-    /** Valor decimal controlado (ej: 1234.56). */
-    value?: number;
-    /** Se llama con el valor decimal en cada tecla del usuario. */
-    onChange?: (value: number) => void;
+    /**
+     * Valor controlado en centavos (entero, ej: 123456 = 1234.56).
+     * Único canal de estado/aritmética: al ser entero, sumas/restas/comparaciones
+     * son exactas, sin errores de punto flotante.
+     */
+    valueCents?: number;
+    /** Se llama con los centavos (entero) en cada tecla del usuario. */
+    onChangeCents?: (cents: number) => void;
     /** Se llama al perder el foco con (centavos, texto formateado). */
     onMoneyChange?: (cents: number, formatted: string) => void;
     /** Número de decimales. Si no se pasa, usa la config global. */
@@ -33,8 +37,8 @@ export interface MoneyInputProps
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 const MoneyInput = ({
-    value = 0,
-    onChange,
+    valueCents = 0,
+    onChangeCents,
     onMoneyChange,
     decimals,
     symbol,
@@ -57,20 +61,20 @@ const MoneyInput = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Sincronizar value externo → input interno (sin disparar eventos)
+    // Sincronizar valueCents externo → input interno (sin disparar eventos).
+    // Al ser entero de punta a punta, la sincronización es exacta.
     useEffect(() => {
         const ctrl = ctrlRef.current;
         if (!ctrl) return;
-        if (ctrl.getValue() !== value) ctrl.setValue(value, false);
-    }, [value]);
+        if (ctrl.getCents() !== valueCents) ctrl.setCents(valueCents, false);
+    }, [valueCents]);
 
-    // money-input → onChange (cada tecla)
+    // money-input → onChangeCents (cada tecla). e.detail.value ya son centavos enteros.
     const handleMoneyInput = useCallback(
         (e: CustomEvent<{ value: number }>) => {
-            const factor = Math.pow(10, decimals ?? 2);
-            onChange?.(e.detail.value / factor);
+            onChangeCents?.(e.detail.value);
         },
-        [onChange, decimals],
+        [onChangeCents],
     );
 
     // money-change → onMoneyChange (al perder foco)
@@ -110,4 +114,3 @@ const MoneyInput = ({
 };
 
 export default MoneyInput;
-

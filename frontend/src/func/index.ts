@@ -7,6 +7,7 @@ import { setMoneyConfig } from './moneyConfig';
 import type { MoneyConfig } from './moneyConfig';
 import type { MoneyInputController } from './inputMoney/activateMoneyInput';
 import activateMoneyInput from './inputMoney/activateMoneyInput';
+import centsToDisplay from './inputMoney/centsToDisplay';
 
 export {
     showMoney,
@@ -14,6 +15,7 @@ export {
     moneyToString,
     montoNoNegativo,
     setMoneyConfig,
-    activateMoneyInput
+    activateMoneyInput,
+    centsToDisplay
 };
 export type { MoneyConfig, MoneyInputController };

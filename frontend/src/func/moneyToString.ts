@@ -80,8 +80,16 @@ const moneyToString = (
     };
 
     try {
-        const entero    = Math.floor(montoNumerico);
-        const decimales = Math.round((montoNumerico % 1) * 100);
+        let entero      = Math.floor(montoNumerico);
+        let decimales   = Math.round((montoNumerico % 1) * 100);
+
+        if (decimales === 100) {
+            decimales = 0;
+            entero += 1;
+        } else if (decimales === -100) {
+            decimales = 0;
+            entero -= 1;
+        }
 
         const textoEntero    = numeroATexto(entero);
         const textoDecimales = numeroATexto(decimales);

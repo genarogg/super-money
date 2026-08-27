@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import MoneyInput from './MoneyInput';
+import { centsToDisplay } from '../../func';
 
-const fmtBs = (v: number) =>
-    'Bs. ' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const fmtBs = (cents: number) => `Bs. ${centsToDisplay(cents, 2)}`;
 
 export default function MoneyInputDemo() {
-    const [costo,  setCosto]  = useState(75464846);
-    const [precio, setPrecio] = useState(0);
-    const [log,    setLog]    = useState<string[]>([]);
+    const [costoCents,  setCostoCents]  = useState(7546484600);
+    const [precioCents, setPrecioCents] = useState(0);
+    const [log,         setLog]         = useState<string[]>([]);
 
-    const ganancia = precio - costo;
-    const margen   = precio > 0 ? (ganancia / precio) * 100 : 0;
+    // Resta entera exacta: sin errores de punto flotante.
+    const gananciaCents = precioCents - costoCents;
+    const margen = precioCents > 0 ? (gananciaCents / precioCents) * 100 : 0;
 
     const addLog = (name: string, cents: number, formatted: string) => {
         const time = new Date().toLocaleTimeString();
@@ -19,9 +20,10 @@ export default function MoneyInputDemo() {
         );
     };
 
-    const applyPreset = (c: number, p: number) => {
-        setCosto(c);
-        setPrecio(p);
+    // Presets ya expresados en centavos: no hay conversión Bs→centavos en runtime.
+    const applyPreset = (costoC: number, precioC: number) => {
+        setCostoCents(costoC);
+        setPrecioCents(precioC);
     };
 
     return (
@@ -36,8 +38,8 @@ export default function MoneyInputDemo() {
                         <label style={s.label} htmlFor="bcv-costo">Costo BCV</label>
                         <MoneyInput
                             id="bcv-costo"
-                            value={costo}
-                            onChange={setCosto}
+                            valueCents={costoCents}
+                            onChangeCents={setCostoCents}
                             symbol="Bs."
                             decimals={2}
                         />
@@ -46,8 +48,8 @@ export default function MoneyInputDemo() {
                         <label style={s.label} htmlFor="bcv-precio">Precio de venta</label>
                         <MoneyInput
                             id="bcv-precio"
-                            value={precio}
-                            onChange={setPrecio}
+                            valueCents={precioCents}
+                            onChangeCents={setPrecioCents}
                             symbol="Bs."
                             decimals={2}
                         />
@@ -57,9 +59,9 @@ export default function MoneyInputDemo() {
                 <hr style={s.divider} />
 
                 <div style={s.grid2}>
-                    <StatCard label="Costo"    value={fmtBs(costo)} />
-                    <StatCard label="Precio"   value={fmtBs(precio)} />
-                    <StatCard label="Ganancia" value={fmtBs(ganancia)} color={ganancia >= 0 ? 'green' : 'red'} />
+                    <StatCard label="Costo"    value={fmtBs(costoCents)} />
+                    <StatCard label="Precio"   value={fmtBs(precioCents)} />
+                    <StatCard label="Ganancia" value={fmtBs(gananciaCents)} color={gananciaCents >= 0 ? 'green' : 'red'} />
                     <StatCard label="Margen"   value={`${margen.toFixed(1)}%`} color={margen >= 0 ? 'green' : 'red'} />
                 </div>
             </section>
@@ -67,22 +69,22 @@ export default function MoneyInputDemo() {
             {/* ── Setear externamente ── */}
             <section style={s.section}>
                 <p style={s.sectionLabel}>Setear valor externamente</p>
-                <p style={s.hint}>Simula una carga desde API o preseteados rápidos.</p>
+                <p style={s.hint}>Simula una carga desde API o preseteados rápidos (valores ya en centavos).</p>
                 <div style={s.btnRow}>
-                    <button style={s.btn} onClick={() => applyPreset(100, 150)}>
+                    <button style={s.btn} onClick={() => applyPreset(10000, 15000)}>
                         Preset: 100 / 150
                     </button>
-                    <button style={s.btn} onClick={() => applyPreset(1500.75, 2250)}>
+                    <button style={s.btn} onClick={() => applyPreset(150075, 225000)}>
                         Preset: 1.500,75 / 2.250
                     </button>
-                    <button style={s.btn} onClick={() => applyPreset(99999.99, 149999)}>
+                    <button style={s.btn} onClick={() => applyPreset(9999999, 14999900)}>
                         Preset máximo
                     </button>
-                    <button style={s.btn} onClick={() => { setCosto(0); setPrecio(0); }}>
+                    <button style={s.btn} onClick={() => { setCostoCents(0); setPrecioCents(0); }}>
                         Resetear todo
                     </button>
                 </div>
-                <pre style={s.code}>{`// estado React\ncosto  = ${costo.toFixed(2)}\nprecio = ${precio.toFixed(2)}`}</pre>
+                <pre style={s.code}>{`// estado React (centavos, entero)\ncostoCents  = ${costoCents}\nprecioCents = ${precioCents}`}</pre>
             </section>
 
             {/* ── Log de eventos money-change ── */}
@@ -93,8 +95,8 @@ export default function MoneyInputDemo() {
                         <label style={s.label} htmlFor="bcv-log-a">Campo A</label>
                         <MoneyInput
                             id="bcv-log-a"
-                            value={0}
-                            onChange={() => {}}
+                            valueCents={0}
+                            onChangeCents={() => {}}
                             onMoneyChange={(cents, formatted) => addLog('campo-a', cents, formatted)}
                             symbol="Bs."
                         />
@@ -103,8 +105,8 @@ export default function MoneyInputDemo() {
                         <label style={s.label} htmlFor="bcv-log-b">Campo B</label>
                         <MoneyInput
                             id="bcv-log-b"
-                            value={0}
-                            onChange={() => {}}
+                            valueCents={0}
+                            onChangeCents={() => {}}
                             onMoneyChange={(cents, formatted) => addLog('campo-b', cents, formatted)}
                             symbol="Bs."
                         />

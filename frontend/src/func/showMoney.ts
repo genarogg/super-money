@@ -3,13 +3,13 @@ import centsToDisplay from './inputMoney/centsToDisplay';
 import { getMoneyConfig } from './moneyConfig';
  
 /**
- * Muestra un valor decimal como cadena de dinero formateada.
+ * Muestra un valor en centavos como cadena de dinero formateada.
  * Usa la configuración global establecida con `setMoneyConfig` si no se pasan parámetros.
  *
- * @param value    - El valor a mostrar (ej: 1234.56)
- * @param symbol   - Símbolo de moneda (override; usa el global si se omite)
+ * @param value    - El valor a mostrar, siempre como entero en centavos (ej: 123456)
  * @param decimals - Número de decimales (override; usa el global si se omite)
- * @returns        - Cadena formateada, ej: "1,234.56 Bs."
+ * @param symbol   - Símbolo de moneda (override; usa el global si se omite)
+ * @returns        - Cadena formateada, ej: showMoney(123456) → "1,234.56 Bs."
  */
 export const showMoney = (value: number, decimals?: number, symbol?: string): string => {
     const cfg = getMoneyConfig();
