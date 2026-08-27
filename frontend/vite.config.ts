@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -20,8 +19,6 @@ export default defineConfig({
 
   preview: {
     host: '0.0.0.0',
-    allowedHosts: true,
-   
-
+    allowedHosts: true
   },
 })
