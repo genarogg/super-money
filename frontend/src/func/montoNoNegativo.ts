@@ -6,11 +6,7 @@ const montoNoNegativo = (valor?: number) => {
         return { isValido: false, message: "El monto no puede ser negativo" };
     }
 
-    if (valor >= 0) {
-        return { isValido: true };
-    }
-
-    return { isValido: false, message: "Valor inválido" };
+    return { isValido: true };
 };
 
 export default montoNoNegativo;
