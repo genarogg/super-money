@@ -208,7 +208,7 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
         // que reconciliar (evita trabajo/eventos de más).
         const rawValue = input.value;
         const onlyDigits = rawValue.replace(/\D/g, '');
-        if (onlyDigits === String(cents)) return;
+        if ((parseInt(onlyDigits, 10) || 0) === cents) return;
 
         // El navegador ya insertó/borró algo fuera de nuestro control de
         // teclado (típico de teclados virtuales/IME en Android, donde el
