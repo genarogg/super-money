@@ -166,6 +166,9 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
                     const leftDigits = digits.slice(0, dPos);
                     const onlyZerosLeft = leftDigits.every(d => d === '0');
                     if (digits[dPos] === '0' && onlyZerosLeft) {
+                        // No es un bug: al intentar borrar un cero de relleno (no editable),
+                        // el cursor se envía al final del input en vez de quedarse quieto,
+                        // llevando al usuario de vuelta a la zona donde sí puede escribir.
                         render(false, dPos - 1);
                     } else {
                         digits.splice(dPos, 1);
