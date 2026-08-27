@@ -49,6 +49,18 @@ const numeroATexto = (n: number): string => {
     return partes.join(' ');
 };
 
+// "de" solo va después de millón/millones cuando éste es el último grupo numérico
+// antes del sustantivo (p. ej. "un millón de Bolívares"). Si hay miles o un resto
+// después (p. ej. "un millón doscientos mil Bolívares"), no corresponde "de".
+const requiereDeTrasMillones = (n: number): boolean => {
+    const abs = Math.abs(n);
+    const millones = Math.floor(abs / 1_000_000);
+    const miles = Math.floor((abs % 1_000_000) / 1_000);
+    const resto = abs % 1_000;
+
+    return millones > 0 && miles === 0 && resto === 0;
+};
+
 const moneyToString = (
     monto: number | string,
     moneda?: {
@@ -77,7 +89,9 @@ const moneyToString = (
         const textoMoneda   = entero    === 1 ? cfg.singular    : cfg.plural;
         const textoCentimos = decimales === 1 ? cfg.centSingular : cfg.centPlural;
 
-        const resultado = `${textoEntero} ${textoMoneda} con ${textoDecimales} ${textoCentimos}`;
+        const conectorMoneda = requiereDeTrasMillones(entero) ? 'de ' : '';
+
+        const resultado = `${textoEntero} ${conectorMoneda}${textoMoneda} con ${textoDecimales} ${textoCentimos}`;
 
         return resultado.charAt(0).toUpperCase() + resultado.slice(1);
     } catch (error) {

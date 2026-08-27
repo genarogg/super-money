@@ -24,13 +24,13 @@ let globalConfig = { ...defaultConfig };
 
 export const setMoneyConfig = (config: MoneyConfig): void => {
     globalConfig = {
-        symbol:   config.symbol   ?? defaultConfig.symbol,
-        decimals: config.decimals ?? defaultConfig.decimals,
+        symbol:   config.symbol   ?? globalConfig.symbol,
+        decimals: config.decimals ?? globalConfig.decimals,
         moneda: {
-            plural:       config.moneda?.plural       ?? defaultConfig.moneda.plural,
-            singular:     config.moneda?.singular     ?? defaultConfig.moneda.singular,
-            centPlural:   config.moneda?.centPlural   ?? defaultConfig.moneda.centPlural,
-            centSingular: config.moneda?.centSingular ?? defaultConfig.moneda.centSingular,
+            plural:       config.moneda?.plural       ?? globalConfig.moneda.plural,
+            singular:     config.moneda?.singular     ?? globalConfig.moneda.singular,
+            centPlural:   config.moneda?.centPlural   ?? globalConfig.moneda.centPlural,
+            centSingular: config.moneda?.centSingular ?? globalConfig.moneda.centSingular,
         },
     };
 };
