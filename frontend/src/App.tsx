@@ -5,7 +5,7 @@ import Nav from './components/Nav';
 import Demo from './components/Demo';
 import Footer from './components/Footer';
 import initMoneyInputs from './func/inputMoney';
-// import MoneyInputDemo from './components/proyect/MoneyInputDemoReact';
+
 
 function App() {
   useEffect(() => {
@@ -14,7 +14,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      {/* <MoneyInputDemo /> */}
+
       <Nav />
       <main>
         <Hero />

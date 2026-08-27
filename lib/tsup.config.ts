@@ -3,7 +3,8 @@ import { defineConfig } from "tsup"
 export default defineConfig({
   entry: ["index.ts"],
   outDir: "dist",
-  format: ["cjs", "esm"],
+  format: ["cjs", "esm", "iife"],
+  globalName: "superMoney",
   platform: "node",
   target: "esnext",
   clean: true,

@@ -20,14 +20,14 @@ pnpm add supermoney
 ### 1. Inicializar la librería
 
 ```typescript
-import initMoneyInputs from 'supermoney';
+import { initMoneyInputs } from 'supermoney';
 initMoneyInputs();
 ```
 
 ### 2. Usar en HTML
 
 ```html
-<input type="money" currency="USD" decimals="2" />
+<input type="money" decimals="2" />
 ```
 
 ## API
@@ -43,8 +43,8 @@ Muestra un valor entero (cents) como cadena de dinero formateado.
 ```typescript
 import { showMoney } from 'supermoney';
 
-showMoney(123456, 2, '$'); // "$ 1,234.56
-showMoney(1234, 0, '€'); // "€ 1,234"
+showMoney(123456, 2, '$'); // "1,234.56 $"
+showMoney(1234, 0, '€'); // "1,234 €"
 ```
 
 ## Atributos del input
@@ -52,7 +52,6 @@ showMoney(1234, 0, '€'); // "€ 1,234"
 | Atributo   | Tipo   | Descripción                              |
 |------------|--------|------------------------------------------|
 | type       | string | Siempre "money"                         |
-| currency   | string | Código de moneda (ej: USD, EUR, COP)   |
 | decimals   | number | Número de decimales (default: 2)         |
 | min        | number | Valor mínimo permitido                     |
 | max        | number | Valor máximo permitido                     |
@@ -73,13 +72,12 @@ document.querySelector('input[type="money"]').addEventListener('money-input', (e
 ```html
 <input
   type="money"
-  currency="USD"
   decimals="2"
   id="mi-input"
 />
 
 <script type="module">
-  import initMoneyInputs, { showMoney } from 'supermoney';
+  import { initMoneyInputs, showMoney } from 'supermoney';
   initMoneyInputs();
 
   const input = document.getElementById('mi-input');

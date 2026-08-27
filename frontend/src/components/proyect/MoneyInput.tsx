@@ -1,30 +1,44 @@
 import { useRef, useEffect, useCallback } from 'react';
-import activateMoneyInput from '../../func/inputMoney/activateMoneyInput';
+import { activateMoneyInput, initMoneyInputs, type MoneyInputController, type MoneyConfig } from '../../func';
+// import { activateMoneyInput, initMoneyInputs, type MoneyInputController, type MoneyConfig } from 'supermoney';
 
+// ─── init global (se ejecuta una sola vez en toda la app) ─────────────────────
+let globalInitDone = false;
+
+const ensureGlobalInit = (config?: MoneyConfig) => {
+    if (globalInitDone) return;
+    globalInitDone = true;
+    initMoneyInputs(config);
+};
+
+// ─── Props ────────────────────────────────────────────────────────────────────
 export interface MoneyInputProps
     extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value' | 'type' | 'onBlur'> {
+    /** Valor decimal controlado (ej: 1234.56). */
     value?: number;
+    /** Se llama con el valor decimal en cada tecla del usuario. */
     onChange?: (value: number) => void;
+    /** Se llama al perder el foco con (centavos, texto formateado). */
     onMoneyChange?: (cents: number, formatted: string) => void;
+    /** Número de decimales. Si no se pasa, usa la config global. */
     decimals?: number;
+    /** Símbolo de moneda visible (ej: "Bs."). Solo informativo. */
     symbol?: string;
+    /**
+     * Config global de moneda. Solo se aplica en la primera instancia montada.
+     * Para cambiarla después usa `setMoneyConfig` directamente.
+     */
+    config?: MoneyConfig;
 }
 
-interface MoneyInputController {
-    getCents: () => number;
-    getValue: () => number;
-    setCents: (newCents: number, triggerEvent?: boolean) => void;
-    setValue: (value: number, triggerEvent?: boolean) => void;
-    reset: (triggerEvent?: boolean) => void;
-    element: HTMLInputElement;
-}
-
+// ─── Componente ───────────────────────────────────────────────────────────────
 const MoneyInput = ({
     value = 0,
     onChange,
     onMoneyChange,
     decimals,
-    symbol = ' Bs. ',
+    symbol,
+    config,
     id,
     className,
     disabled,
@@ -33,11 +47,14 @@ const MoneyInput = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const ctrlRef = useRef<MoneyInputController | null>(null);
 
-    // Inicializar una sola vez al montar
+    // Init global + activar este input al montar
     useEffect(() => {
+        ensureGlobalInit(config);
         const input = inputRef.current;
         if (!input) return;
         ctrlRef.current = activateMoneyInput(input);
+        // config es intencional solo en el primer mount — no queremos re-init si cambia
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Sincronizar value externo → input interno (sin disparar eventos)
@@ -67,14 +84,13 @@ const MoneyInput = ({
     useEffect(() => {
         const input = inputRef.current;
         if (!input) return;
-        // addEventListener no acepta CustomEvent directamente, se castea solo en el binding
         const onInput = (e: Event) => handleMoneyInput(e as CustomEvent<{ value: number }>);
-        const onChange_ = (e: Event) => handleMoneyChange(e as CustomEvent<{ value: number; formatted: string }>);
+        const onChanged = (e: Event) => handleMoneyChange(e as CustomEvent<{ value: number; formatted: string }>);
         input.addEventListener('money-input', onInput);
-        input.addEventListener('money-change', onChange_);
+        input.addEventListener('money-change', onChanged);
         return () => {
             input.removeEventListener('money-input', onInput);
-            input.removeEventListener('money-change', onChange_);
+            input.removeEventListener('money-change', onChanged);
         };
     }, [handleMoneyInput, handleMoneyChange]);
 
@@ -94,3 +110,4 @@ const MoneyInput = ({
 };
 
 export default MoneyInput;
+

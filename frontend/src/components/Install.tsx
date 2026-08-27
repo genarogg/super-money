@@ -4,7 +4,7 @@ const codeExamples = [
   {
     label: 'HTML',
     code: `<!-- Instalar -->
-<script src="https://unpkg.com/supermoney@latest/dist/index.umd.js"></script>
+<script src="https://unpkg.com/supermoney@latest/dist/index.global.js"></script>
 
 <!-- Inicializar -->
 <script>
