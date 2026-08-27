@@ -1,3 +1,5 @@
+import { getMoneyConfig } from './moneyConfig';
+
 const unidades = [
     '',
     'un',
@@ -139,6 +141,19 @@ const requiereDeTrasMillones = (n: number): boolean => {
     return millones > 0 && miles === 0 && resto === 0;
 };
 
+/**
+ * Convierte un monto a su representación en texto (letras), en español.
+ *
+ * @param monto    - El monto a convertir, siempre como entero en centavos
+ *                    (igual que `showMoney`/`centsToDisplay`), ej: 123456 → "mil
+ *                    doscientos treinta y cuatro Bolívares con cincuenta y seis
+ *                    céntimos".
+ * @param moneda   - Nombres de la moneda/céntimos a usar (override; usa los
+ *                    globales si se omiten).
+ * @param decimals - Número de decimales del monto en centavos (override; usa
+ *                    el global de `setMoneyConfig` si se omite). Determina
+ *                    dónde se separan los "centavos" al dividir `monto`.
+ */
 const moneyToString = (
     monto: number | string,
     moneda?: {
@@ -146,7 +161,8 @@ const moneyToString = (
         singular?: string;
         centPlural?: string;
         centSingular?: string;
-    }
+    },
+    decimals?: number
 ): string => {
     const montoNumerico =
         typeof monto === 'string'
@@ -160,25 +176,24 @@ const moneyToString = (
         centSingular: moneda?.centSingular ?? 'céntimo',
     };
 
+    const resolvedDecimals = decimals ?? getMoneyConfig().decimals;
+    const factor = Math.pow(10, resolvedDecimals);
+
     try {
         if (!Number.isFinite(montoNumerico)) {
             throw new Error('El monto debe ser un número finito');
         }
 
-        // Separamos el signo antes de realizar cualquier operación
-        // con la parte entera y decimal.
+        // `monto` llega como entero en centavos (misma convención que
+        // showMoney/centsToDisplay/activateMoneyInput), no como decimal.
+        // Separamos el signo y luego obtenemos la parte entera y los
+        // "céntimos" dividiendo por el factor de decimales, en vez de
+        // usar el punto decimal del propio número.
         const esNegativo = montoNumerico < 0;
-        const montoAbsoluto = Math.abs(montoNumerico);
+        const centavosAbsolutos = Math.round(Math.abs(montoNumerico));
 
-        let entero = Math.floor(montoAbsoluto);
-        let decimales = Math.round((montoAbsoluto % 1) * 100);
-
-        // Corrección por redondeo:
-        // 1.999 → 2.00
-        if (decimales === 100) {
-            decimales = 0;
-            entero += 1;
-        }
+        const entero = Math.floor(centavosAbsolutos / factor);
+        const decimales = centavosAbsolutos % factor;
 
         const textoEntero = numeroATexto(entero);
         const textoDecimales = numeroATexto(decimales);

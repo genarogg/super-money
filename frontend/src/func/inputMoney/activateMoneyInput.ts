@@ -136,17 +136,40 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
                 render(true, dStart);
             } else {
                 const dPos = visualPosToCursorPos(selStart);
-                if (dPos > 0) {
+                if (dPos === 0) {
+                    // No hay nada a la izquierda del cursor que se pueda
+                    // borrar. En vez de quedarse sin hacer nada, el cursor
+                    // avanza hacia la derecha (misma regla que al chocar
+                    // contra relleno), hasta llegar al final.
+                    if (dPos < digits.length) {
+                        render(false, dPos + 1);
+                    }
+                } else {
                     const leftOfCursor = digits.slice(0, dPos);
                     const onlyZerosLeft = leftOfCursor.every(d => d === '0');
                     if (digits[dPos - 1] === '0' && onlyZerosLeft) {
-                        render(false, dPos);
+                        // Al chocar contra un cero de relleno (no editable) no
+                        // se borra nada, pero el cursor avanza hacia la derecha
+                        // un dígito por cada pulsación de Backspace, hasta
+                        // llegar al final (misma dirección de avance que Delete
+                        // en su rama de relleno).
+                        render(false, dPos + 1);
                     } else {
-                        const decimalStartDigit = digits.length - decimals;
-                        const inDecimalZone = (dPos - 1) >= decimalStartDigit;
+                        // Al borrar, los dígitos a la derecha del cursor se
+                        // recorren hacia la izquierda para ocupar el hueco,
+                        // pero su CANTIDAD no cambia. Por eso anclamos el
+                        // cursor por "cuántos dígitos quedan a su derecha"
+                        // (invariante ante el borrado) en vez de por índice
+                        // absoluto desde el inicio: un índice absoluto se
+                        // desalinea cuando, al perder dígitos, vuelve a
+                        // hacer falta un cero de relleno al frente (ej.
+                        // "1.23" → "0.12"), que corre todo un lugar más de
+                        // lo que el índice viejo contemplaba.
+                        const digitsFromEnd = digits.length - dPos;
                         digits.splice(dPos - 1, 1);
                         cents = parseInt(digits.join('')) || 0;
-                        render(true, inDecimalZone ? dPos : dPos - 1);
+                        const newDigits = String(cents).padStart(decimals + 1, '0');
+                        render(true, newDigits.length - digitsFromEnd);
                     }
                 }
             }
@@ -167,9 +190,9 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
                     const onlyZerosLeft = leftDigits.every(d => d === '0');
                     if (digits[dPos] === '0' && onlyZerosLeft) {
                         // No es un bug: al intentar borrar un cero de relleno (no editable),
-                        // el cursor se envía al final del input en vez de quedarse quieto,
-                        // llevando al usuario de vuelta a la zona donde sí puede escribir.
-                        render(false, dPos - 1);
+                        // no se borra nada, pero el cursor avanza un dígito por cada
+                        // pulsación de Delete, hasta llegar a la zona donde sí puede escribir.
+                        render(false, dPos + 1);
                     } else {
                         digits.splice(dPos, 1);
                         cents = parseInt(digits.join('')) || 0;
