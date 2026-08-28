@@ -20,9 +20,12 @@
     "-----lib-----": "-----------------------------------------",
     "publicar": "cd lib && pnpm run publicar",
     "-----Global-----": "-----------------------------------------",
-    "clean:install": "node ./global/clean.js && pnpm install"
+    "clean:install": "node ./global/clean.js && pnpm install",
+    "zip": "node script/zip-proyect.js"
   },
   "dependencies": {
+    "archiver": "^7.0.1",
+    "ignore": "^7.0.6",
     "turbo": "^2.7.2"
   },
   "packageManager": "pnpm@8.15.0"

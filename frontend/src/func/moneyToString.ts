@@ -1,4 +1,4 @@
-import { getMoneyConfig } from './moneyConfig';
+import { getMoneyConfig, resolveDecimals } from './moneyConfig';
 
 export type MoneyLang = 'es' | 'en';
 
@@ -166,33 +166,10 @@ const defaultMonedaPorIdioma: Record<MoneyLang, Required<MonedaNombres>> = {
     },
 };
 
-const DEFAULT_DECIMALS = 2;
-
-// Valida que `decimals` sea un entero >= 0 utilizable como exponente de base 10.
-// `decimals` no entero o negativo (ej. -1) hace que `factor = 10 ** decimals` sea
-// fraccionario, lo que arrastra error de punto flotante en `% factor` y termina
-// indexando arrays de palabras con un índice no entero (`undefined`, filtrado en
-// silencio del resultado). Ante cualquier valor inválido, se hace fallback a 2
-// junto con un aviso, en vez de dejar que ese resto fraccionario se propague.
-const resolveDecimals = (decimals: number | undefined, fallback: number): number => {
-    const value = decimals ?? fallback;
-    if (Number.isInteger(value) && value >= 0) {
-        return value;
-    }
-    console.warn(
-        `moneyToString: "decimals" debe ser un entero >= 0 (recibido: ${value}). Usando ${DEFAULT_DECIMALS} en su lugar.`
-    );
-    return DEFAULT_DECIMALS;
-};
-
 /**
- * Parámetros de `moneyToString`.
+ * Parámetros opcionales de `moneyToString`.
  */
-export interface MoneyToStringParams {
-    /** El monto a convertir, siempre como entero en centavos (igual que
-     *  `showMoney`/`centsToDisplay`), ej: 123456 → "mil doscientos treinta y
-     *  cuatro Bolívares con cincuenta y seis céntimos". Acepta string parseable. */
-    number: number | string;
+export interface MoneyToStringOptions {
     /** Idioma de salida: "es" (default) o "en". */
     lang?: MoneyLang;
     /** Nombres de la moneda/céntimos a usar (override; usa los defaults del
@@ -208,13 +185,16 @@ export interface MoneyToStringParams {
  * Convierte un monto a su representación en texto (letras), en español o inglés.
  *
  * @example
- * moneyToString({ number: 123456 });
+ * moneyToString(123456);
  * // → "Mil doscientos treinta y cuatro Bolívares con cincuenta y seis céntimos"
  *
- * moneyToString({ number: 123456, lang: 'en' });
+ * moneyToString(123456, { lang: 'en' });
  * // → "One thousand two hundred thirty-four Dollars with fifty-six cents"
  */
-const moneyToString = ({ number, lang = 'es', moneda, decimals }: MoneyToStringParams): string => {
+const moneyToString = (
+    number: number | string,
+    { lang = 'es', moneda, decimals }: MoneyToStringOptions = {}
+): string => {
     const montoNumerico =
         typeof number === 'string'
             ? parseFloat(number)
@@ -230,7 +210,7 @@ const moneyToString = ({ number, lang = 'es', moneda, decimals }: MoneyToStringP
         centSingular: moneda?.centSingular ?? (lang === 'es' ? globalCfg.moneda.centSingular : defaults.centSingular),
     };
 
-    const resolvedDecimals = resolveDecimals(decimals, globalCfg.decimals);
+    const resolvedDecimals = resolveDecimals(decimals, globalCfg.decimals, 'moneyToString');
     const factor = Math.pow(10, resolvedDecimals);
 
     try {
@@ -238,11 +218,6 @@ const moneyToString = ({ number, lang = 'es', moneda, decimals }: MoneyToStringP
             throw new Error('El monto debe ser un número finito');
         }
 
-        // `number` llega como entero en centavos (misma convención que
-        // showMoney/centsToDisplay/activateMoneyInput), no como decimal.
-        // Separamos el signo y luego obtenemos la parte entera y los
-        // "céntimos" dividiendo por el factor de decimales, en vez de
-        // usar el punto decimal del propio número.
         const esNegativo = montoNumerico < 0;
         const centavosAbsolutos = Math.round(Math.abs(montoNumerico));
 

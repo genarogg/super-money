@@ -1,6 +1,5 @@
-
 import centsToDisplay from './inputMoney/centsToDisplay';
-import { getMoneyConfig } from './moneyConfig';
+import { getMoneyConfig, resolveDecimals } from './moneyConfig';
  
 /**
  * Muestra un valor en centavos como cadena de dinero formateada.
@@ -13,7 +12,7 @@ import { getMoneyConfig } from './moneyConfig';
  */
 export const showMoney = (value: number, decimals?: number, symbol?: string): string => {
     const cfg = getMoneyConfig();
-    const resolvedDecimals = decimals ?? cfg.decimals;
+    const resolvedDecimals = resolveDecimals(decimals, cfg.decimals, 'showMoney');
     const resolvedSymbol   = symbol  ?? cfg.symbol;
 
     const formatted = centsToDisplay(value, resolvedDecimals);

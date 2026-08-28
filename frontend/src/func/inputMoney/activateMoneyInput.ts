@@ -1,5 +1,5 @@
 import centsToDisplay from './centsToDisplay';
-import { getMoneyConfig } from '../moneyConfig';
+import { DEFAULT_DECIMALS, getMoneyConfig, resolveDecimals } from '../moneyConfig';
 
 /** API pública que devuelve activateMoneyInput para controlar el input externamente. */
 export interface MoneyInputController {
@@ -19,9 +19,15 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
     }
     input.dataset.moneyInit = 'true';
 
-    const decimals = input.hasAttribute('decimals')
+    // `decimals` puede venir de un atributo HTML mal puesto (`decimals="-1"`,
+    // `decimals="abc"` → NaN) o de una config global corrupta
+    // (`setMoneyConfig({ decimals: 1.5 })`). Se valida una sola vez acá, antes
+    // de que se use en cualquier otro punto del closure (padStart, centsToDisplay),
+    // para que todo el input trabaje con un entero >= 0 garantizado.
+    const rawDecimals = input.hasAttribute('decimals')
         ? parseInt(input.getAttribute('decimals')!)
         : getMoneyConfig().decimals;
+    const decimals = resolveDecimals(rawDecimals, DEFAULT_DECIMALS, 'activateMoneyInput');
 
     // Tope absoluto soportado por la librería: coincide con Number.MAX_SAFE_INTEGER
     // (9,007,199,254,740,991). Por encima de este valor, `cents` deja de poder

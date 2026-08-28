@@ -47,6 +47,37 @@ showMoney(123456, 2, '$'); // "1,234.56 $"
 showMoney(1234, 0, '€'); // "1,234 €"
 ```
 
+### moneyToString({ number, lang?, moneda?, decimals? })
+
+Convierte un valor entero (centavos) a su representación en texto (letras), en español o inglés.
+
+| Parámetro  | Tipo                | Descripción                                                                 |
+|------------|---------------------|------------------------------------------------------------------------------|
+| `number`   | `number \| string`  | Monto en centavos enteros (misma convención que `showMoney`). Obligatorio.   |
+| `lang`     | `"es" \| "en"`      | Idioma de salida. Default: `"es"`.                                          |
+| `moneda`   | `object`             | Override de `{ plural, singular, centPlural, centSingular }`. Usa los defaults del idioma (o los globales de `setMoneyConfig` en español) si se omite. |
+| `decimals` | `number`             | Decimales del monto (dónde se separan los "céntimos"). Debe ser un entero ≥ 0; un valor inválido cae a `2` con un aviso por consola. Usa el global de `setMoneyConfig` si se omite. |
+
+```typescript
+import { moneyToString } from 'supermoney';
+
+moneyToString({ number: 123456 });
+// "Mil doscientos treinta y cuatro Bolívares con cincuenta y seis céntimos"
+
+moneyToString({ number: 123456, lang: 'en' });
+// "One thousand two hundred thirty-four Dollars with fifty-six cents"
+
+moneyToString({
+  number: 150000,
+  lang: 'en',
+  moneda: { plural: 'Euros', singular: 'Euro', centPlural: 'cents', centSingular: 'cent' },
+});
+// "One thousand five hundred Euros with zero cents"
+```
+
+> **Nota de migración:** en versiones anteriores `moneyToString` recibía argumentos posicionales
+> (`moneyToString(monto, moneda?, decimals?)`). Ahora recibe un único objeto: `moneyToString({ number, lang?, moneda?, decimals? })`.
+
 ## Atributos del input
 
 | Atributo   | Tipo   | Descripción                              |
