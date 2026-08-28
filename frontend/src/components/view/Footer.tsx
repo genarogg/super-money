@@ -31,7 +31,7 @@ export default function Footer() {
 
           <div className="flex flex-col md:flex-row items-center justify-end gap-8">
             <a
-              href="https://github.com"
+              href="https://github.com/genarogg/super-money"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-violet-600 transition-all duration-200 hover:scale-105"
