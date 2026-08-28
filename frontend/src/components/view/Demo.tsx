@@ -119,7 +119,7 @@ export default function Demo() {
                 </h3>
               </div>
               <p className="text-2xl sm:text-3xl font-mono font-bold text-indigo-600 break-all">
-                {showMoney(storeValue, 2, '$')}
+                {showMoney(storeValue, { decimals: 2 })}
               </p>
               <p className="text-xs font-mono text-gray-400 mt-2">
                 Valor formateado
@@ -168,7 +168,7 @@ export default function Demo() {
                 {', '}
                 <span className="text-emerald-400">'$'</span>
                 {')'}
-                <span className="text-gray-500">{`  // → "${showMoney(storeValue, 2, '$')}"`}</span>
+                <span className="text-gray-500">{`  // → "${showMoney(storeValue, { decimals: 2, symbol: '$' })}"`}</span>
               </p>
             </div>
           </div>
