@@ -121,8 +121,24 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
 
     // ─── eventos de teclado ──────────────────────────────────────────────────
 
+    // Teclas de control que siempre deben dejarse pasar (navegación, edición,
+    // atajos). Cualquier otra tecla de un solo carácter que no sea un dígito
+    // (letras, símbolos, "e"/"+"/"-"/".", etc.) se bloquea acá: es una lista
+    // blanca, no una lista negra, para no depender de enumerar cada letra posible.
+    const ALLOWED_CONTROL_KEYS = new Set([
+        'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+        'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+        'Home', 'End', 'PageUp', 'PageDown',
+        'Shift', 'Control', 'Alt', 'Meta', 'CapsLock',
+    ]);
+
     input.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (['e', 'E', '+', '-', '.'].includes(e.key)) {
+        const isDigit = e.key.length === 1 && e.key >= '0' && e.key <= '9';
+        const isAllowedControl = ALLOWED_CONTROL_KEYS.has(e.key);
+        // Atajos con modificador (Ctrl/Cmd+C, Ctrl/Cmd+A, etc.) no deben bloquearse.
+        const isShortcut = e.ctrlKey || e.metaKey;
+
+        if (!isDigit && !isAllowedControl && !isShortcut) {
             e.preventDefault();
             return;
         }
