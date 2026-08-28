@@ -8,7 +8,7 @@ import Demo from './components/view/Demo';
 import Api from './components/view/Api';
 import Footer from './components/view/Footer';
 import initMoneyInputs from './func/inputMoney';
-import Example from './components/example/index';
+// import Example from './components/example/index';
 
 
 
@@ -19,8 +19,8 @@ function App() {
 
   return (
     <>
-    <Example />
-      {/* <div className="min-h-screen bg-white text-slate-900">
+    {/* <Example /> */}
+      <div className="min-h-screen bg-white text-slate-900">
         <Nav />
         <main>
           <Hero />
@@ -29,7 +29,7 @@ function App() {
           <Api />
         </main>
         <Footer />
-      </div> */}
+      </div>
     </>
   );
 }
