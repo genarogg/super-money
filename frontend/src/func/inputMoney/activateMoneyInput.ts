@@ -37,11 +37,14 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
     const ABSOLUTE_MAX_CENTS = Number.MAX_SAFE_INTEGER; // 9007199254740991
     const ABSOLUTE_MIN_CENTS = 0;
 
-    const min: number = input.hasAttribute('min')
-        ? Math.max(ABSOLUTE_MIN_CENTS, parseInt(input.getAttribute('min')!))
+    const rawMin = input.hasAttribute('min') ? parseInt(input.getAttribute('min')!) : ABSOLUTE_MIN_CENTS;
+    const min: number = Number.isFinite(rawMin)
+        ? Math.max(ABSOLUTE_MIN_CENTS, rawMin)
         : ABSOLUTE_MIN_CENTS;
-    const max: number = input.hasAttribute('max')
-        ? Math.min(ABSOLUTE_MAX_CENTS, parseInt(input.getAttribute('max')!))
+
+    const rawMax = input.hasAttribute('max') ? parseInt(input.getAttribute('max')!) : ABSOLUTE_MAX_CENTS;
+    const max: number = Number.isFinite(rawMax)
+        ? Math.min(ABSOLUTE_MAX_CENTS, rawMax)
         : ABSOLUTE_MAX_CENTS;
 
     let cents = 0;

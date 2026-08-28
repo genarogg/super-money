@@ -138,7 +138,7 @@ export default function Demo() {
             </div>
             <div className="bg-gray-900 rounded-xl p-4 font-mono text-sm text-gray-300 leading-7">
               <p>
-                <span className="text-gray-500">{'// showMoney(valor, decimals?, symbol?)'}</span>
+                <span className="text-gray-500">{'// showMoney(valor, { decimals?, symbol? })'}</span>
               </p>
               <p>
                 <span className="text-gray-500">{'// Los parámetros opcionales sobreescriben la config global'}</span>
@@ -163,11 +163,11 @@ export default function Demo() {
                 <span className="text-purple-400">showMoney</span>
                 {'('}
                 <span className="text-amber-400">{storeValue}</span>
-                {', '}
+                {', { decimals: '}
                 <span className="text-amber-400">2</span>
-                {', '}
+                {', symbol: '}
                 <span className="text-emerald-400">'$'</span>
-                {')'}
+                {' })'}
                 <span className="text-gray-500">{`  // → "${showMoney(storeValue, { decimals: 2, symbol: '$' })}"`}</span>
               </p>
             </div>

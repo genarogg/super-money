@@ -86,7 +86,7 @@ export default function Install() {
               4. Mostrar valores con <code className="normal-case bg-gray-100 px-2 py-0.5 rounded">showMoney()</code>
             </h3>
             <div className="bg-slate-950 text-white rounded-2xl px-4 py-4 font-mono text-sm leading-7 overflow-x-auto">
-              <p className="text-gray-400">{'// showMoney(valor, decimals?, symbol?)'}</p>
+              <p className="text-gray-400">{'// showMoney(valor, { decimals?, symbol? })'}</p>
               <p>
                 <span className="text-purple-400">showMoney</span>{'('}
                 <span className="text-amber-400">23456</span>
@@ -96,20 +96,20 @@ export default function Install() {
               <p>
                 <span className="text-purple-400">showMoney</span>{'('}
                 <span className="text-amber-400">23456</span>
-                {', '}
+                {', { decimals: '}
                 <span className="text-amber-400">2</span>
-                {', '}
+                {', symbol: '}
                 <span className="text-emerald-400">'$'</span>
-                {')'}
-                <span className="text-gray-400">{'        // → "234.56 $"  (override puntual)'}</span>
+                {' })'}
+                <span className="text-gray-400">{'  // → "234.56 $"  (override puntual)'}</span>
               </p>
               <p>
                 <span className="text-purple-400">showMoney</span>{'('}
                 <span className="text-amber-400">23456</span>
-                {', '}
+                {', { decimals: '}
                 <span className="text-amber-400">0</span>
-                {')'}
-                <span className="text-gray-400">{'             // → "23,456"  (sin decimales)'}</span>
+                {' })'}
+                <span className="text-gray-400">{'       // → "23,456"  (sin decimales)'}</span>
               </p>
             </div>
             <p className="font-mono text-xs text-gray-400 mt-3">
