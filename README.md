@@ -53,8 +53,10 @@ showMoney(1234, 0, '€'); // "1,234 €"
 |------------|--------|------------------------------------------|
 | type       | string | Siempre "money"                         |
 | decimals   | number | Número de decimales (default: 2)         |
-| min        | number | Valor mínimo permitido                     |
-| max        | number | Valor máximo permitido                     |
+| min        | number | Valor mínimo permitido, en la misma unidad entera que `money-input`/`money-change` (centavos, o más precisamente `10^decimals` partes de la unidad). Default: `0`. Ej.: para un mínimo de $1.00, usar `min="100"`, no `min="1"`. |
+| max        | number | Valor máximo permitido, en la misma unidad entera que `money-input`/`money-change` (centavos). Default y techo absoluto: `9007199254740991` (`Number.MAX_SAFE_INTEGER`) — un `max` mayor se recorta a este valor, ya que por encima de él los enteros dejan de representarse con precisión exacta en JS. |
+
+`min`/`max` se aplican en todo momento (tecleo, paste, y llamadas a `setCents`/`setValue`), no solo al perder el foco: el valor nunca puede quedar fuera de rango.
 
 ## Eventos
 

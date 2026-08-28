@@ -137,6 +137,25 @@ export default function Install() {
               El atributo <code className="bg-gray-100 px-1.5 py-0.5 rounded">decimals</code> en el HTML tiene prioridad sobre la config global.
             </p>
           </div>
+
+          {/* min/max por input */}
+          <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+            <h3 className="font-mono text-sm text-gray-500 uppercase tracking-widest mb-4">
+              6. Límites min / max
+            </h3>
+            <div className="bg-slate-950 text-white rounded-2xl px-4 py-4 font-mono text-sm leading-7 overflow-x-auto">
+              <p className="text-gray-400">{'<!-- min/max están en la misma unidad entera que money-input/money-change: centavos -->'}</p>
+              <p className="text-gray-400">{'<!-- "mínimo $1.00" es min="100", no min="1" -->'}</p>
+              <p>{'<input '}<span className="text-sky-400">type</span>{'='}<span className="text-emerald-400">"money"</span>{' '}<span className="text-sky-400">min</span>{'='}<span className="text-emerald-400">"100"</span>{' '}<span className="text-sky-400">max</span>{'='}<span className="text-emerald-400">"10000"</span>{' />'}</p>
+            </div>
+            <p className="font-mono text-xs text-gray-400 mt-3">
+              El valor se recorta a <code className="bg-gray-100 px-1.5 py-0.5 rounded">min</code>/<code className="bg-gray-100 px-1.5 py-0.5 rounded">max</code> en
+              todo momento (tecleo, paste y <code className="bg-gray-100 px-1.5 py-0.5 rounded">setCents</code>/<code className="bg-gray-100 px-1.5 py-0.5 rounded">setValue</code>),
+              no solo al perder el foco. Por defecto <code className="bg-gray-100 px-1.5 py-0.5 rounded">min</code> es <strong>0</strong> y{' '}
+              <code className="bg-gray-100 px-1.5 py-0.5 rounded">max</code> es <strong>9,007,199,254,740,991</strong> (<code className="bg-gray-100 px-1.5 py-0.5 rounded">Number.MAX_SAFE_INTEGER</code>),
+              que es también el techo absoluto: un <code className="bg-gray-100 px-1.5 py-0.5 rounded">max</code> mayor a ese número se recorta a este valor.
+            </p>
+          </div>
         </div>
 
         <div className="bg-violet-50 border border-violet-100 rounded-xl p-6">

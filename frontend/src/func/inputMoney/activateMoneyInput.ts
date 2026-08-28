@@ -23,8 +23,20 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
         ? parseInt(input.getAttribute('decimals')!)
         : getMoneyConfig().decimals;
 
-    const min: number | null = input.hasAttribute('min') ? parseInt(input.getAttribute('min')!) : null;
-    const max: number | null = input.hasAttribute('max') ? parseInt(input.getAttribute('max')!) : null;
+    // Tope absoluto soportado por la librería: coincide con Number.MAX_SAFE_INTEGER
+    // (9,007,199,254,740,991). Por encima de este valor, `cents` deja de poder
+    // representarse como entero exacto en JS y se corrompe en silencio.
+    // Es el techo real de `max`, no solo el default: aunque el consumidor pida
+    // un `max` mayor, se recorta a este límite.
+    const ABSOLUTE_MAX_CENTS = Number.MAX_SAFE_INTEGER; // 9007199254740991
+    const ABSOLUTE_MIN_CENTS = 0;
+
+    const min: number = input.hasAttribute('min')
+        ? Math.max(ABSOLUTE_MIN_CENTS, parseInt(input.getAttribute('min')!))
+        : ABSOLUTE_MIN_CENTS;
+    const max: number = input.hasAttribute('max')
+        ? Math.min(ABSOLUTE_MAX_CENTS, parseInt(input.getAttribute('max')!))
+        : ABSOLUTE_MAX_CENTS;
 
     let cents = 0;
     input.value = centsToDisplay(0, decimals);
@@ -77,8 +89,13 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
 
     // ─── API pública ─────────────────────────────────────────────────────────
 
+    const clampCents = (value: number): number => {
+        if (!Number.isFinite(value)) return min;
+        return Math.min(max, Math.max(min, Math.round(value)));
+    };
+
     const setCents = (newCents: number, triggerEvent = false): void => {
-        cents = Math.max(0, Math.round(newCents));
+        cents = clampCents(newCents);
         render(triggerEvent);
     };
 
@@ -116,12 +133,12 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
                 const dStart = visualPosToCursorPos(selStart);
                 const dEnd   = visualPosToCursorPos(selEnd);
                 digits.splice(dStart, dEnd - dStart, String(digit));
-                cents = parseInt(digits.join('')) || 0;
+                cents = clampCents(parseInt(digits.join('')) || 0);
                 render(true, dStart + 1);
             } else {
                 const dPos = visualPosToCursorPos(selStart);
                 digits.splice(dPos, 0, String(digit));
-                cents = parseInt(digits.join('')) || 0;
+                cents = clampCents(parseInt(digits.join('')) || 0);
                 render(true, dPos + 1);
             }
 
@@ -132,7 +149,7 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
                 const dStart = visualPosToCursorPos(selStart);
                 const dEnd   = visualPosToCursorPos(selEnd);
                 digits.splice(dStart, dEnd - dStart);
-                cents = parseInt(digits.join('')) || 0;
+                cents = clampCents(parseInt(digits.join('')) || 0);
                 render(true, dStart);
             } else {
                 const dPos = visualPosToCursorPos(selStart);
@@ -167,7 +184,7 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
                         // lo que el índice viejo contemplaba.
                         const digitsFromEnd = digits.length - dPos;
                         digits.splice(dPos - 1, 1);
-                        cents = parseInt(digits.join('')) || 0;
+                        cents = clampCents(parseInt(digits.join('')) || 0);
                         const newDigits = String(cents).padStart(decimals + 1, '0');
                         render(true, newDigits.length - digitsFromEnd);
                     }
@@ -181,7 +198,7 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
                 const dStart = visualPosToCursorPos(selStart);
                 const dEnd   = visualPosToCursorPos(selEnd);
                 digits.splice(dStart, dEnd - dStart);
-                cents = parseInt(digits.join('')) || 0;
+                cents = clampCents(parseInt(digits.join('')) || 0);
                 render(true, dStart);
             } else {
                 const dPos = visualPosToCursorPos(selStart);
@@ -195,7 +212,7 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
                         render(false, dPos + 1);
                     } else {
                         digits.splice(dPos, 1);
-                        cents = parseInt(digits.join('')) || 0;
+                        cents = clampCents(parseInt(digits.join('')) || 0);
                         render(true, dPos);
                     }
                 }
@@ -219,7 +236,7 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
         const caret = input.selectionStart ?? rawValue.length;
         const digitPos = visualPosToCursorPos(caret);
 
-        cents = parseInt(onlyDigits, 10) || 0;
+        cents = clampCents(parseInt(onlyDigits, 10) || 0);
         render(true, digitPos);
     });
 
@@ -235,7 +252,7 @@ const activateMoneyInput = (input: HTMLInputElement): MoneyInputController | nul
         const dStart = visualPosToCursorPos(selStart);
         const dEnd   = visualPosToCursorPos(selEnd);
         digits.splice(dStart, dEnd - dStart, ...Array.from(pastedDigits));
-        cents = parseInt(digits.join('')) || 0;
+        cents = clampCents(parseInt(digits.join('')) || 0);
         render(true, dStart + pastedDigits.length);
     });
 

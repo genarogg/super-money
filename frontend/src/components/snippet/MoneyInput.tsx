@@ -68,7 +68,7 @@ const MoneyInput = ({
     useEffect(() => {
         const ctrl = ctrlRef.current;
         if (!ctrl || valueCents === undefined) return;
-        if (ctrl.getValue() !== valueCents) ctrl.setValue(valueCents, false);
+        if (ctrl.getCents() !== valueCents) ctrl.setCents(valueCents, false);
     }, [valueCents]);
 
     // money-input → onChangeCents (cada tecla). Se reenvía tal cual en
