@@ -51,3 +51,9 @@ backend/prisma/fn/client
 backend/prisma/client/*
 
 .env
+
+*.zip
+*.tar
+*.gz
+*.bz2
+*.7z
