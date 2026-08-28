@@ -11,12 +11,14 @@
     "docs",
     "frontend",
     "backend",
-    "lib"
+    "lib",
+    "remotion"
   ],
   "scripts": {
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev --parallel --filter=frontend",
     "build": "turbo run build --filter=frontend",
     "start": "turbo run start",
+    "remotion": "turbo run dev --filter=remotion",
     "-----lib-----": "-----------------------------------------",
     "publicar": "cd lib && pnpm run publicar",
     "-----Global-----": "-----------------------------------------",
