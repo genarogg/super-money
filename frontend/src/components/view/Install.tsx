@@ -3,36 +3,108 @@ import CodeTabs from './sub/CodeTabs';
 const codeExamples = [
   {
     label: 'JS Vainilla',
-    code: `<!-- Instalar -->
-<script src="https://unpkg.com/supermoney@latest/dist/index.js"></script>
-
-<!-- Inicializar -->
-<script>
-  superMoney.initMoneyInputs({
-    symbol: '$',
-    decimals: 2,
-  });
-</script>`,
+    code: (
+      <>
+        <p className="text-gray-400">{'<!-- Instalar -->'}</p>
+        <p>
+          {'<script '}
+          <span className="text-sky-400">src</span>
+          {'='}
+          <span className="text-emerald-400">"https://unpkg.com/supermoney@latest/dist/index.js"</span>
+          {'></script>'}
+        </p>
+        <br />
+        <p className="text-gray-400">{'<!-- Inicializar -->'}</p>
+        <p>{'<script>'}</p>
+        <p className="pl-4">
+          {'superMoney.'}
+          <span className="text-purple-400">initMoneyInputs</span>
+          {'({'}
+        </p>
+        <p className="pl-8">
+          <span className="text-sky-400">symbol</span>
+          {': '}
+          <span className="text-emerald-400">'$'</span>
+          {','}
+        </p>
+        <p className="pl-8">
+          <span className="text-sky-400">decimals</span>
+          {': '}
+          <span className="text-amber-400">2</span>
+          {','}
+        </p>
+        <p className="pl-4">{'});'}</p>
+        <p>{'</script>'}</p>
+      </>
+    ),
   },
   {
     label: 'React',
-    code: `// Instalar
-pnpm add supermoney
-
-// En tu App.jsx / main.jsx
-import { useEffect } from 'react';
-import { initMoneyInputs } from 'supermoney';
-
-function App() {
-  useEffect(() => {
-    initMoneyInputs({
-      symbol: '$',
-      decimals: 2,
-    });
-  }, []);
-
-  return <input type="money" />;
-}`,
+    code: (
+      <>
+        <p className="text-gray-400">{'// Instalar'}</p>
+        <p>
+          <span className="font-semibold">pnpm</span> add <span className="text-emerald-400">supermoney</span>
+        </p>
+        <br />
+        <p className="text-gray-400">{'// En tu App.jsx / main.jsx'}</p>
+        <p>
+          <span className="text-pink-400">import</span>
+          {' { useEffect } '}
+          <span className="text-pink-400">from</span>
+          {' '}
+          <span className="text-emerald-400">'react'</span>
+          {';'}
+        </p>
+        <p>
+          <span className="text-pink-400">import</span>
+          {' { initMoneyInputs } '}
+          <span className="text-pink-400">from</span>
+          {' '}
+          <span className="text-emerald-400">'supermoney'</span>
+          {';'}
+        </p>
+        <br />
+        <p>
+          <span className="text-pink-400">function</span>
+          {' '}
+          <span className="text-purple-400">App</span>
+          {'() {'}
+        </p>
+        <p className="pl-4">
+          <span className="text-purple-400">useEffect</span>
+          {'(() => {'}
+        </p>
+        <p className="pl-8">
+          <span className="text-purple-400">initMoneyInputs</span>
+          {'({'}
+        </p>
+        <p className="pl-12">
+          <span className="text-sky-400">symbol</span>
+          {': '}
+          <span className="text-emerald-400">'$'</span>
+          {','}
+        </p>
+        <p className="pl-12">
+          <span className="text-sky-400">decimals</span>
+          {': '}
+          <span className="text-amber-400">2</span>
+          {','}
+        </p>
+        <p className="pl-8">{'});'}</p>
+        <p className="pl-4">{'}, []);'}</p>
+        <br />
+        <p className="pl-4">
+          <span className="text-pink-400">return</span>
+          {' <input '}
+          <span className="text-sky-400">type</span>
+          {'='}
+          <span className="text-emerald-400">"money"</span>
+          {' />;'}
+        </p>
+        <p>{'}'}</p>
+      </>
+    ),
   },
 ];
 
@@ -165,6 +237,13 @@ export default function Install() {
             del DOM funciona automáticamente, incluyendo los que se agreguen dinámicamente.
           </p>
         </div>
+
+        <p className="text-center font-mono text-sm text-gray-400 mt-6">
+          ¿Necesitas validar montos, convertirlos a texto o controlar un input por código?{' '}
+          <a href="#api" className="text-violet-600 hover:text-violet-700 underline underline-offset-4">
+            Mira el resto de la API →
+          </a>
+        </p>
       </div>
     </section>
   );

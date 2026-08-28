@@ -5,6 +5,7 @@ import Hero from './components/view/Hero';
 import Install from './components/view/Install';
 import Nav from './components/view/Nav';
 import Demo from './components/view/Demo';
+import Api from './components/view/Api';
 import Footer from './components/view/Footer';
 import initMoneyInputs from './func/inputMoney';
 
@@ -21,6 +22,7 @@ function App() {
           <Hero />
           <Install />
           <Demo />
+          <Api />
         </main>
         <Footer />
       </div>

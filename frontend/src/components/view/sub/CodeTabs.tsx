@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 export interface CodeTab {
   label: string;
-  code: string;
+  code: ReactNode;
 }
 
 interface CodeTabsProps {
@@ -32,10 +32,8 @@ export default function CodeTabs({ tabs }: CodeTabsProps) {
         ))}
       </div>
 
-      <div className="rounded-3xl border border-gray-200 bg-slate-950 p-5 text-white">
-        <pre className="overflow-x-auto text-sm leading-6">
-          <code>{activeTab.code}</code>
-        </pre>
+      <div className="rounded-3xl border border-gray-200 bg-slate-950 p-5 text-white font-mono text-sm leading-6 overflow-x-auto">
+        {activeTab.code}
       </div>
     </div>
   );
