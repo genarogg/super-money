@@ -1,10 +1,10 @@
-import CodeTabs from './CodeTabs';
+import CodeTabs from './sub/CodeTabs';
 
 const codeExamples = [
   {
-    label: 'HTML',
+    label: 'JS Vainilla',
     code: `<!-- Instalar -->
-<script src="https://unpkg.com/supermoney@latest/dist/index.global.js"></script>
+<script src="https://unpkg.com/supermoney@latest/dist/index.js"></script>
 
 <!-- Inicializar -->
 <script>
@@ -33,65 +33,6 @@ function App() {
 
   return <input type="money" />;
 }`,
-  },
-  {
-    label: 'Vue',
-    code: `// Instalar
-pnpm add supermoney
-
-// En tu main.js / App.vue
-import { onMounted } from 'vue';
-import { initMoneyInputs } from 'supermoney';
-
-onMounted(() => {
-  initMoneyInputs({
-    symbol: 'Bs.',
-    decimals: 2,
-    moneda: {
-      plural: 'Bolívares',
-      singular: 'Bolívar',
-      centPlural: 'céntimos',
-      centSingular: 'céntimo',
-    },
-  });
-});`,
-  },
-  {
-    label: 'Next.js',
-    code: `// Instalar
-pnpm add supermoney
-
-// En tu layout.js / page.js
-'use client';
-
-import { useEffect } from 'react';
-import { initMoneyInputs } from 'supermoney';
-
-export default function RootLayout({ children }) {
-  useEffect(() => {
-    initMoneyInputs({
-      symbol: '$',
-      decimals: 2,
-    });
-  }, []);
-
-  return <html><body>{children}</body></html>;
-}`,
-  },
-  {
-    label: 'Astro',
-    code: `// Instalar
-pnpm add supermoney
-
-// En tu layout.astro / index.astro
-<script>
-  import { initMoneyInputs } from 'supermoney';
-
-  initMoneyInputs({
-    symbol: '$',
-    decimals: 2,
-  });
-</script>`,
   },
 ];
 

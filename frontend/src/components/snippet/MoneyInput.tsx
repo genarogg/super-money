@@ -14,10 +14,15 @@ const ensureGlobalInit = (config?: MoneyConfig) => {
 // ─── Props ────────────────────────────────────────────────────────────────────
 export interface MoneyInputProps
     extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value' | 'type' | 'onBlur'> {
-    /** Valor decimal controlado (ej: 1234.56). */
-    value?: number;
-    /** Se llama con el valor decimal en cada tecla del usuario. */
-    onChange?: (value: number) => void;
+    /**
+     * Valor controlado, en centavos (entero, ej: 123456 = 1.234,56).
+     * Se usa enteros para evitar errores de punto flotante.
+     * Si se omite (undefined), el input queda "no controlado": el usuario
+     * escribe libremente y React no le fuerza un valor en cada render.
+     */
+    valueCents?: number;
+    /** Se llama con el valor en centavos en cada tecla del usuario. */
+    onChangeCents?: (cents: number) => void;
     /** Se llama al perder el foco con (centavos, texto formateado). */
     onMoneyChange?: (cents: number, formatted: string) => void;
     /** Número de decimales. Si no se pasa, usa la config global. */
@@ -33,8 +38,8 @@ export interface MoneyInputProps
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 const MoneyInput = ({
-    value = 0,
-    onChange,
+    valueCents,
+    onChangeCents,
     onMoneyChange,
     decimals,
     symbol,
@@ -57,20 +62,23 @@ const MoneyInput = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Sincronizar value externo → input interno (sin disparar eventos)
+    // Sincronizar valueCents externo → input interno (sin disparar eventos).
+    // Si valueCents es undefined, el input queda no controlado y no se toca
+    // (evita que un re-render externo le "borre" al usuario lo que escribió).
     useEffect(() => {
         const ctrl = ctrlRef.current;
-        if (!ctrl) return;
-        if (ctrl.getValue() !== value) ctrl.setValue(value, false);
-    }, [value]);
+        if (!ctrl || valueCents === undefined) return;
+        if (ctrl.getValue() !== valueCents) ctrl.setValue(valueCents, false);
+    }, [valueCents]);
 
-    // money-input → onChange (cada tecla)
+    // money-input → onChangeCents (cada tecla). Se reenvía tal cual en
+    // centavos: sin dividir por 10^decimals, para no reintroducir errores
+    // de punto flotante que el resto de la app evita a propósito.
     const handleMoneyInput = useCallback(
         (e: CustomEvent<{ value: number }>) => {
-            const factor = Math.pow(10, decimals ?? 2);
-            onChange?.(e.detail.value / factor);
+            onChangeCents?.(e.detail.value);
         },
-        [onChange, decimals],
+        [onChangeCents],
     );
 
     // money-change → onMoneyChange (al perder foco)
@@ -110,4 +118,3 @@ const MoneyInput = ({
 };
 
 export default MoneyInput;
-

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Copy, Check } from 'lucide-react';
 
 type BadgeColor = 'violet' | 'emerald' | 'amber' | 'sky' | 'rose';
 
@@ -78,35 +79,11 @@ export default function Hero() {
             onClick={handleCopy}
             className="ml-4 p-1.5 rounded-md transition-colors duration-200"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={copied ? 'hidden' : ''}
-            >
-              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={copied ? 'text-emerald-400' : 'hidden'}
-            >
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
+            {copied ? (
+              <Check size={16} strokeWidth={2} className="text-emerald-400" />
+            ) : (
+              <Copy size={16} strokeWidth={1.8} className="text-gray-100" />
+            )}
           </button>
         </div>
       </div>
