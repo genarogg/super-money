@@ -4,6 +4,7 @@ import { Scene } from "../components/Scene";
 import { CodeWindow, comment, fn, kw, num, plain, str } from "../components/CodeWindow";
 import { AtmInputDemo } from "../components/AtmInputDemo";
 import { colors, fonts, FPS } from "../theme";
+import { useOrientation } from "../useOrientation";
 
 /**
  * 4:00 - 6:30 → qué resuelve supermoney: input ATM, HTML vanilla, integración
@@ -100,23 +101,24 @@ const fadeIn = (frame: number, dur = 30) =>
 
 const IntroBeat: React.FC = () => {
   const frame = useCurrentFrame();
+  const { isVertical, scale } = useOrientation();
   const opacity = fadeIn(frame);
   return (
-    <div style={{ opacity, textAlign: "center", maxWidth: 920, padding: "0 50px" }}>
-      <div style={{ fontSize: 26, color: colors.textDim, marginBottom: 14 }}>
+    <div style={{ opacity, textAlign: "center", maxWidth: isVertical ? 900 : 920, padding: "0 50px" }}>
+      <div style={{ fontSize: 26 * scale, color: colors.textDim, marginBottom: 14 }}>
         Ese principio empaquetado en una librería:
       </div>
       <div
         style={{
           fontFamily: fonts.mono,
-          fontSize: 64,
+          fontSize: 64 * scale,
           fontWeight: 700,
           color: colors.text,
         }}
       >
         super<span style={{ color: colors.ok }}>money</span>
       </div>
-      <div style={{ fontSize: 28, color: colors.textDim, marginTop: 18, lineHeight: 1.5 }}>
+      <div style={{ fontSize: 28 * scale, color: colors.textDim, marginTop: 18, lineHeight: 1.5 }}>
         Inputs de dinero para la web. Siempre en enteros.
         <br />
         Nunca deja que el punto flotante se cuele.
@@ -127,6 +129,7 @@ const IntroBeat: React.FC = () => {
 
 const AtmBeat: React.FC = () => {
   const frame = useCurrentFrame();
+  const { scale } = useOrientation();
   const titleOpacity = fadeIn(frame);
   // teclas: 1, 9, 9, 9 → $19.99, espaciadas para que se vean entrar una por una
   const keyFrames = [80, 110, 140, 170];
@@ -150,8 +153,8 @@ const AtmBeat: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 34 }}>
-      <div style={{ opacity: titleOpacity, fontSize: 30, color: colors.text, fontWeight: 600 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 34 * scale }}>
+      <div style={{ opacity: titleOpacity, fontSize: 30 * scale, color: colors.text, fontWeight: 600 }}>
         1. El input, modo ATM
       </div>
       <AtmInputDemo keyFrames={keyFrames} />
@@ -166,6 +169,7 @@ const AtmBeat: React.FC = () => {
 
 const HtmlVanillaBeat: React.FC = () => {
   const frame = useCurrentFrame();
+  const { scale } = useOrientation();
   const titleOpacity = fadeIn(frame);
 
   const codeStart = 40;
@@ -213,8 +217,8 @@ const HtmlVanillaBeat: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 28 }}>
-      <div style={{ opacity: titleOpacity, fontSize: 30, color: colors.text, fontWeight: 600 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 28 * scale }}>
+      <div style={{ opacity: titleOpacity, fontSize: 30 * scale, color: colors.text, fontWeight: 600 }}>
         2. Un solo HTML, sin build
       </div>
       {codeOpacity > 0 ? (
@@ -222,7 +226,7 @@ const HtmlVanillaBeat: React.FC = () => {
           <CodeWindow
             title="index.html"
             width={780}
-            fontSize={19}
+            fontSize={18}
             lines={htmlLines}
             dot="ok"
           />
@@ -234,7 +238,7 @@ const HtmlVanillaBeat: React.FC = () => {
             opacity: noteOpacity,
             maxWidth: 820,
             textAlign: "center",
-            fontSize: 24,
+            fontSize: 24 * scale,
             color: colors.textDim,
             lineHeight: 1.6,
             padding: "0 30px",
@@ -253,6 +257,7 @@ const HtmlVanillaBeat: React.FC = () => {
 
 const InstallBeat: React.FC = () => {
   const frame = useCurrentFrame();
+  const { scale } = useOrientation();
   const titleOpacity = fadeIn(frame);
 
   // Línea narrada: "Su instalación es muy sencilla..." — este beat dejó de
@@ -290,14 +295,14 @@ const InstallBeat: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 28 }}>
-      <div style={{ opacity: titleOpacity, fontSize: 30, color: colors.text, fontWeight: 600 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 28 * scale }}>
+      <div style={{ opacity: titleOpacity, fontSize: 30 * scale, color: colors.text, fontWeight: 600 }}>
         Con un bundler: instalación por pnpm
       </div>
       <div
         style={{
           opacity: lineOpacity,
-          fontSize: 26,
+          fontSize: 26 * scale,
           color: colors.text,
           textAlign: "center",
           maxWidth: 720,
@@ -322,7 +327,7 @@ const InstallBeat: React.FC = () => {
             opacity: noteOpacity,
             maxWidth: 820,
             textAlign: "center",
-            fontSize: 24,
+            fontSize: 24 * scale,
             color: colors.textDim,
             lineHeight: 1.6,
             padding: "0 30px",
@@ -344,6 +349,7 @@ const InstallBeat: React.FC = () => {
 
 const ReactBeat: React.FC = () => {
   const frame = useCurrentFrame();
+  const { isVertical, scale } = useOrientation();
   const titleOpacity = fadeIn(frame);
 
   // Momento A: el import directo desde supermoney — ya no hay wrapper
@@ -431,12 +437,18 @@ const ReactBeat: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30 }}>
-      <div style={{ opacity: titleOpacity, fontSize: 30, color: colors.text, fontWeight: 600 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30 * scale }}>
+      <div style={{ opacity: titleOpacity, fontSize: 30 * scale, color: colors.text, fontWeight: 600 }}>
         3. Con React: un componente controlado
       </div>
 
-      <div style={{ position: "relative", width: 780, height: 470 }}>
+      <div
+        style={{
+          position: "relative",
+          width: isVertical ? "100%" : 780,
+          height: (isVertical ? 470 : 470) * scale,
+        }}
+      >
         {wrapperOpacity > 0 && wrapperExitOpacity > 0 ? (
           <div
             style={{
@@ -470,7 +482,7 @@ const ReactBeat: React.FC = () => {
             <CodeWindow
               title="FormularioPrecio.tsx"
               width={620}
-              fontSize={19}
+              fontSize={17}
               lines={usageLines}
               dot="ok"
             />
@@ -482,9 +494,9 @@ const ReactBeat: React.FC = () => {
         <div
           style={{
             opacity: noteOpacity,
-            maxWidth: 820,
+            maxWidth: isVertical ? 880 : 820,
             textAlign: "center",
-            fontSize: 22,
+            fontSize: 22 * scale,
             color: colors.textDim,
             lineHeight: 1.6,
             padding: "0 30px",
@@ -502,6 +514,7 @@ const ReactBeat: React.FC = () => {
 
 const ShowMoneyBeat: React.FC = () => {
   const frame = useCurrentFrame();
+  const { isVertical, scale } = useOrientation();
   const titleOpacity = fadeIn(frame);
 
   const codeStart = 20;
@@ -525,13 +538,13 @@ const ShowMoneyBeat: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 34 }}>
-      <div style={{ opacity: titleOpacity, fontSize: 30, color: colors.text, fontWeight: 600 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 34 * scale }}>
+      <div style={{ opacity: titleOpacity, fontSize: 30 * scale, color: colors.text, fontWeight: 600 }}>
         3. Mostrarlo formateado
       </div>
       {codeOpacity > 0 ? (
         <div style={{ opacity: codeOpacity }}>
-          <CodeWindow title="mostrar.js" width={800} fontSize={26} lines={lines} />
+          <CodeWindow title="mostrar.js" width={800} fontSize={isVertical ? 20 : 26} lines={lines} />
         </div>
       ) : null}
       {resultOpacity > 0 ? (
@@ -544,10 +557,10 @@ const ShowMoneyBeat: React.FC = () => {
             gap: 10,
           }}
         >
-          <div style={{ fontFamily: fonts.mono, fontSize: 48, fontWeight: 700, color: colors.ok }}>
+          <div style={{ fontFamily: fonts.mono, fontSize: 48 * scale, fontWeight: 700, color: colors.ok }}>
             "1,234.56 $"
           </div>
-          <div style={{ fontSize: 22, color: colors.textDim, maxWidth: 640, textAlign: "center" }}>
+          <div style={{ fontSize: 22 * scale, color: colors.textDim, maxWidth: isVertical ? 700 : 640, textAlign: "center" }}>
             El entero completo — los últimos 2 dígitos son los centavos
           </div>
         </div>
@@ -558,6 +571,7 @@ const ShowMoneyBeat: React.FC = () => {
 
 const MoneyToStringBeat: React.FC = () => {
   const frame = useCurrentFrame();
+  const { isVertical, scale } = useOrientation();
   const titleOpacity = fadeIn(frame);
 
   const codeStart = 20;
@@ -581,8 +595,8 @@ const MoneyToStringBeat: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30 }}>
-      <div style={{ opacity: titleOpacity, fontSize: 30, color: colors.text, fontWeight: 600 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30 * scale }}>
+      <div style={{ opacity: titleOpacity, fontSize: 30 * scale, color: colors.text, fontWeight: 600 }}>
         4. El monto en letras
       </div>
       {codeOpacity > 0 ? (
@@ -594,10 +608,10 @@ const MoneyToStringBeat: React.FC = () => {
         <div
           style={{
             opacity: resultOpacity,
-            maxWidth: 820,
+            maxWidth: isVertical ? 880 : 820,
             textAlign: "center",
             fontFamily: fonts.mono,
-            fontSize: 26,
+            fontSize: (isVertical ? 22 : 26) * scale,
             color: colors.ok,
             lineHeight: 1.6,
             padding: "0 30px",
@@ -613,26 +627,27 @@ const MoneyToStringBeat: React.FC = () => {
 
 const LimitBeat: React.FC = () => {
   const frame = useCurrentFrame();
+  const { isVertical, scale } = useOrientation();
   const opacity = fadeIn(frame);
   return (
-    <div style={{ opacity, textAlign: "center", maxWidth: 900, padding: "0 50px" }}>
-      <div style={{ fontSize: 24, color: colors.textDim, marginBottom: 14 }}>
+    <div style={{ opacity, textAlign: "center", maxWidth: isVertical ? 900 : 900, padding: "0 50px" }}>
+      <div style={{ fontSize: 24 * scale, color: colors.textDim, marginBottom: 14 }}>
         El tope absoluto no es arbitrario:
       </div>
       <div
         style={{
           fontFamily: fonts.mono,
-          fontSize: 40,
+          fontSize: (isVertical ? 32 : 40) * scale,
           fontWeight: 700,
           color: colors.accent,
         }}
       >
         Number.MAX_SAFE_INTEGER
       </div>
-      <div style={{ fontFamily: fonts.mono, fontSize: 26, color: colors.textDim, marginTop: 10 }}>
+      <div style={{ fontFamily: fonts.mono, fontSize: 26 * scale, color: colors.textDim, marginTop: 10 }}>
         9,007,199,254,740,991
       </div>
-      <div style={{ fontSize: 22, color: colors.textDim, marginTop: 20, lineHeight: 1.5 }}>
+      <div style={{ fontSize: 22 * scale, color: colors.textDim, marginTop: 20, lineHeight: 1.5 }}>
         El punto donde hasta un entero deja de representarse exacto en JS.
       </div>
     </div>

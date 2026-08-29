@@ -1,6 +1,7 @@
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
 import { colors, fonts } from "../theme";
+import { useOrientation } from "../useOrientation";
 
 type Props = {
   title?: string;
@@ -37,14 +38,22 @@ export const CodeWindow: React.FC<Props> = ({
   scrollY = 0,
 }) => {
   const frame = useCurrentFrame();
+  const { isVertical, scale, maxContentWidth } = useOrientation();
 
   const dotColor =
     dot === "error" ? colors.error : dot === "ok" ? colors.ok : colors.textFaint;
 
+  // El width original está pensado para un lienzo 1920px de ancho. En
+  // vertical (1080px) lo topamos a maxContentWidth para que nunca se salga
+  // del lienzo, y aplicamos `scale` a la tipografía para que el código
+  // siga siendo legible (no solo "angosto") en el celular.
+  const effectiveWidth = isVertical ? Math.min(width, maxContentWidth) : width;
+  const effectiveFontSize = fontSize * (isVertical ? scale : 1);
+
   return (
     <div
       style={{
-        width,
+        width: effectiveWidth,
         borderRadius: 14,
         overflow: "hidden",
         background: colors.bgPanel,
@@ -57,7 +66,7 @@ export const CodeWindow: React.FC<Props> = ({
           display: "flex",
           alignItems: "center",
           gap: 10,
-          padding: "14px 20px",
+          padding: isVertical ? "12px 18px" : "14px 20px",
           background: colors.bgPanelAlt,
           borderBottom: `1px solid ${colors.border}`,
         }}
@@ -90,16 +99,16 @@ export const CodeWindow: React.FC<Props> = ({
       </div>
       <div
         style={{
-          padding: maxHeight ? "0" : "26px 30px",
+          padding: maxHeight ? "0" : isVertical ? "22px 24px" : "26px 30px",
           height: maxHeight,
           overflow: maxHeight ? "hidden" : undefined,
         }}
       >
         <div
           style={{
-            padding: maxHeight ? "26px 30px" : 0,
+            padding: maxHeight ? (isVertical ? "22px 24px" : "26px 30px") : 0,
             fontFamily: fonts.mono,
-            fontSize,
+            fontSize: effectiveFontSize,
             lineHeight: 1.65,
             transform: maxHeight ? `translateY(${-scrollY}px)` : undefined,
           }}

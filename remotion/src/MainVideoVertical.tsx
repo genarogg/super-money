@@ -1,49 +1,125 @@
 import React from "react";
-import { AbsoluteFill, useVideoConfig } from "remotion";
-import { MainVideo } from "./MainVideo";
-import { colors } from "./theme";
+import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
+import { TransitionSeries, linearTiming } from "@remotion/transitions";
+import { IntroScene } from "./scenes/00_Intro";
+import { HookScene } from "./scenes/01_Hook";
+import { ExplicacionScene } from "./scenes/02_Explicacion";
+import { SolucionScene } from "./scenes/03_Solucion";
+import { SupermoneyScene } from "./scenes/04_Supermoney";
+import { CierreScene } from "./scenes/05_Cierre";
+import { crossZoom } from "./transitions/crossZoom";
+import {
+  FPS,
+  LEAD_IN_DURATION,
+  TRANSITION_DURATION,
+  sceneDurations,
+  videoDuration,
+} from "./theme";
 
 /**
  * Versión 9:16 (TikTok / Reels / Shorts) del mismo video.
  *
- * El diseño de las escenas (00_Intro..05_Cierre) está construido con
- * medidas en px pensadas para un lienzo 1920×1080 (16:9), centradas con
- * flex/AbsoluteFill pero sin usar useVideoConfig() para adaptar tamaños.
- * Reescribir cada escena para que también luzca "nativa" en vertical es un
- * trabajo de diseño en sí mismo (recomposición de layout, no solo escalado).
+ * Antes este componente renderizaba <MainVideo /> (pensado para 1920×1080)
+ * y lo escalaba dentro de un lienzo 1080×1920, rellenando las bandas
+ * sobrantes arriba/abajo con colors.bg — eso se leía como "fondo negro"
+ * porque colors.bg (#0a0e14) es casi negro, y las bandas de letterbox
+ * quedaban visibles y sin contenido.
  *
- * Este componente toma el enfoque robusto mientras tanto: renderiza
- * MainVideo a tamaño 16:9 y lo escala dentro de un lienzo 1080×1920,
- * centrado verticalmente, con el fondo de la escena (colors.bg) rellenando
- * las bandas superior e inferior. Así el vertical sale ya, sin riesgo de
- * recortes ni texto deformado, y sirve como base sólida si más adelante se
- * quiere adaptar cada escena a su propio layout vertical.
+ * Ahora esta composición renderiza las MISMAS escenas de forma nativa: cada
+ * escena y sus componentes internos (Scene, CodeWindow, AtmInputDemo) leen
+ * useOrientation() y adaptan tamaños/layout según el lienzo real
+ * (useVideoConfig), así el fondo con malla de puntos y el contenido cubren
+ * el 100% de los 1080×1920 sin bandas ni escalado — igual que en 16:9, pero
+ * recompuesto para el alto extra en vez de encogido.
+ *
+ * La estructura de audio, timing y transiciones es un espejo exacto de
+ * MainVideo.tsx — solo cambia qué se renderiza dentro de cada
+ * TransitionSeries.Sequence (mismas escenas, mismas duraciones).
  */
-const SOURCE_WIDTH = 1920;
-const SOURCE_HEIGHT = 1080;
+const BG_VOLUME = 0.1;
+const BG_FADE_OUT_FRAMES = 1 * FPS; // 1s de fade-out al cierre
 
 export const MainVideoVertical: React.FC = () => {
-  const { width, height } = useVideoConfig();
-
-  const scale = Math.min(width / SOURCE_WIDTH, height / SOURCE_HEIGHT);
-  const scaledWidth = SOURCE_WIDTH * scale;
-  const scaledHeight = SOURCE_HEIGHT * scale;
+  const { intro, hook, explicacion, solucion, supermoney, cierre } =
+    sceneDurations;
 
   return (
-    <AbsoluteFill style={{ background: colors.bg }}>
-      <div
-        style={{
-          position: "absolute",
-          top: (height - scaledHeight) / 2,
-          left: (width - scaledWidth) / 2,
-          width: SOURCE_WIDTH,
-          height: SOURCE_HEIGHT,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
+    <AbsoluteFill>
+      <Sequence from={LEAD_IN_DURATION} layout="none">
+        <Audio src={staticFile("audio/voiceover.mp3")} />
+      </Sequence>
+      <Sequence
+        from={LEAD_IN_DURATION}
+        durationInFrames={videoDuration - LEAD_IN_DURATION}
+        layout="none"
       >
-        <MainVideo />
-      </div>
+        <Audio
+          src={staticFile("audio/background.mp3")}
+          volume={(f) =>
+            f > videoDuration - LEAD_IN_DURATION - BG_FADE_OUT_FRAMES
+              ? BG_VOLUME *
+                Math.max(
+                  0,
+                  (videoDuration - LEAD_IN_DURATION - f) / BG_FADE_OUT_FRAMES,
+                )
+              : BG_VOLUME
+          }
+        />
+      </Sequence>
+
+      <Sequence from={LEAD_IN_DURATION} layout="none">
+        <TransitionSeries>
+          <TransitionSeries.Sequence durationInFrames={intro}>
+            <IntroScene />
+          </TransitionSeries.Sequence>
+
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
+
+          <TransitionSeries.Sequence durationInFrames={hook}>
+            <HookScene />
+          </TransitionSeries.Sequence>
+
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
+
+          <TransitionSeries.Sequence durationInFrames={explicacion}>
+            <ExplicacionScene />
+          </TransitionSeries.Sequence>
+
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
+
+          <TransitionSeries.Sequence durationInFrames={solucion}>
+            <SolucionScene />
+          </TransitionSeries.Sequence>
+
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
+
+          <TransitionSeries.Sequence durationInFrames={supermoney}>
+            <SupermoneyScene />
+          </TransitionSeries.Sequence>
+
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
+
+          <TransitionSeries.Sequence durationInFrames={cierre}>
+            <CierreScene />
+          </TransitionSeries.Sequence>
+        </TransitionSeries>
+      </Sequence>
     </AbsoluteFill>
   );
 };
+

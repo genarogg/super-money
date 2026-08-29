@@ -1,6 +1,7 @@
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
 import { colors, fonts } from "../theme";
+import { useOrientation } from "../useOrientation";
 
 // Cada tecla presionada y el estado de `cents` resultante — simula
 // exactamente el comportamiento real de activateMoneyInput.ts: los dígitos
@@ -25,6 +26,7 @@ type Props = {
  */
 export const AtmInputDemo: React.FC<Props> = ({ keyFrames }) => {
   const frame = useCurrentFrame();
+  const { scale } = useOrientation();
 
   let cents = 0;
   let activeKeyIndex = -1;
@@ -46,7 +48,7 @@ export const AtmInputDemo: React.FC<Props> = ({ keyFrames }) => {
       <div
         style={{
           fontFamily: fonts.mono,
-          fontSize: 18,
+          fontSize: 18 * scale,
           color: colors.textDim,
           letterSpacing: 0.5,
         }}
@@ -56,7 +58,7 @@ export const AtmInputDemo: React.FC<Props> = ({ keyFrames }) => {
       <div
         style={{
           position: "relative",
-          padding: "22px 40px",
+          padding: `${22 * scale}px ${40 * scale}px`,
           borderRadius: 12,
           background: colors.bgPanel,
           border: `2px solid ${activeKeyIndex >= 0 ? colors.accent : colors.border}`,
@@ -69,7 +71,7 @@ export const AtmInputDemo: React.FC<Props> = ({ keyFrames }) => {
         <span
           style={{
             fontFamily: fonts.mono,
-            fontSize: 52,
+            fontSize: 52 * scale,
             fontWeight: 700,
             color: colors.text,
             letterSpacing: 2,
@@ -81,7 +83,7 @@ export const AtmInputDemo: React.FC<Props> = ({ keyFrames }) => {
           style={{
             display: "inline-block",
             width: 3,
-            height: 44,
+            height: 44 * scale,
             marginLeft: 8,
             background: colors.accent,
             opacity: Math.sin(frame / 8) > 0 ? 1 : 0,
@@ -97,14 +99,14 @@ export const AtmInputDemo: React.FC<Props> = ({ keyFrames }) => {
             <div
               key={i}
               style={{
-                width: 44,
-                height: 44,
+                width: 44 * scale,
+                height: 44 * scale,
                 borderRadius: 8,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontFamily: fonts.mono,
-                fontSize: 22,
+                fontSize: 22 * scale,
                 fontWeight: 700,
                 color: pressed ? colors.bg : colors.textFaint,
                 background: pressed ? colors.accent : colors.bgPanel,

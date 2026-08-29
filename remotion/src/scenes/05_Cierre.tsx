@@ -2,6 +2,7 @@ import React from "react";
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { Scene } from "../components/Scene";
 import { colors, fonts } from "../theme";
+import { useOrientation } from "../useOrientation";
 
 /**
  * 6:30 - fin → la regla de oro final, dicha en una línea, y el logo de
@@ -12,6 +13,7 @@ import { colors, fonts } from "../theme";
 export const CierreScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { isVertical, scale } = useOrientation();
 
   const ruleSpring = spring({ frame, fps, config: { damping: 16 } });
   const ruleOpacity = interpolate(ruleSpring, [0, 1], [0, 1]);
@@ -28,20 +30,20 @@ export const CierreScene: React.FC = () => {
 
   return (
     <Scene>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 60 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 60 * scale }}>
         <div
           style={{
             opacity: ruleOpacity,
             transform: `translateY(${ruleY}px)`,
             textAlign: "center",
-            maxWidth: 920,
+            maxWidth: isVertical ? 900 : 920,
             padding: "0 50px",
           }}
         >
-          <div style={{ fontSize: 34, color: colors.textDim, marginBottom: 18, lineHeight: 1.5 }}>
+          <div style={{ fontSize: 34 * scale, color: colors.textDim, marginBottom: 18, lineHeight: 1.5 }}>
             La regla no es "ten cuidado con los decimales".
           </div>
-          <div style={{ fontSize: 46, fontWeight: 800, color: colors.text, lineHeight: 1.4 }}>
+          <div style={{ fontSize: 46 * scale, fontWeight: 800, color: colors.text, lineHeight: 1.4 }}>
             Es: no uses decimales para calcular.
             <br />
             Guarda <span style={{ color: colors.ok }}>enteros</span>.
@@ -61,14 +63,14 @@ export const CierreScene: React.FC = () => {
           <div
             style={{
               fontFamily: fonts.mono,
-              fontSize: 56,
+              fontSize: 56 * scale,
               fontWeight: 700,
               color: colors.text,
             }}
           >
             super<span style={{ color: colors.ok }}>money</span>
           </div>
-          <div style={{ fontSize: 22, color: colors.textDim }}>
+          <div style={{ fontSize: 22 * scale, color: colors.textDim }}>
             input · showMoney · moneyToString
           </div>
         </div>

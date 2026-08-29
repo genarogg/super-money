@@ -3,6 +3,7 @@ import { interpolate, useCurrentFrame } from "remotion";
 import { Scene } from "../components/Scene";
 import { CodeWindow, kw, num, plain } from "../components/CodeWindow";
 import { colors, fonts } from "../theme";
+import { useOrientation } from "../useOrientation";
 
 /**
  * 2:15 - 4:00 → la regla de oro: nunca guardar dinero como decimal, guardar
@@ -12,6 +13,7 @@ import { colors, fonts } from "../theme";
  */
 export const SolucionScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { isVertical, scale } = useOrientation();
 
   const titleOpacity = interpolate(frame, [0, 30], [0, 1], {
     extrapolateLeft: "clamp",
@@ -54,15 +56,15 @@ export const SolucionScene: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 36,
+          gap: 36 * scale,
           padding: "0 40px",
         }}
       >
-        <div style={{ opacity: titleOpacity, textAlign: "center", maxWidth: 900 }}>
-          <div style={{ fontSize: 26, color: colors.textDim, marginBottom: 10 }}>
+        <div style={{ opacity: titleOpacity, textAlign: "center", maxWidth: isVertical ? 900 : 900 }}>
+          <div style={{ fontSize: 26 * scale, color: colors.textDim, marginBottom: 10 }}>
             La regla de los sistemas bancarios:
           </div>
-          <div style={{ fontSize: 38, fontWeight: 700, color: colors.text, lineHeight: 1.4 }}>
+          <div style={{ fontSize: 38 * scale, fontWeight: 700, color: colors.text, lineHeight: 1.4 }}>
             Nunca guardes dinero como decimal.
             <br />
             Guárdalo como{" "}
@@ -72,8 +74,8 @@ export const SolucionScene: React.FC = () => {
         </div>
 
         {codeOpacity > 0 ? (
-          <div style={{ opacity: codeOpacity, display: "flex", flexDirection: "column", alignItems: "center", gap: 28 }}>
-            <div style={{ fontSize: 24, color: colors.textDim }}>
+          <div style={{ opacity: codeOpacity, display: "flex", flexDirection: "column", alignItems: "center", gap: 28 * scale }}>
+            <div style={{ fontSize: 24 * scale, color: colors.textDim }}>
               Mismo carrito. $19.99 → <span style={{ color: colors.ok }}>1999</span> centavos.
             </div>
             <CodeWindow
@@ -91,24 +93,28 @@ export const SolucionScene: React.FC = () => {
             style={{
               opacity: resultOpacity,
               fontFamily: fonts.mono,
-              fontSize: 42,
+              fontSize: 42 * scale,
               display: "flex",
-              alignItems: "baseline",
-              gap: 16,
+              flexDirection: isVertical ? "column" : "row",
+              alignItems: isVertical ? "center" : "baseline",
+              gap: isVertical ? 8 : 16,
+              textAlign: "center",
             }}
           >
-            <span style={{ color: colors.textDim }}>console.log(totalCents)</span>
-            <span style={{ color: colors.textFaint }}>→</span>
-            <span
-              style={{
-                color: colors.ok,
-                fontWeight: 700,
-                textShadow: `0 0 20px ${colors.okDim}`,
-              }}
-            >
-              5997
-            </span>
-            <span style={{ color: colors.textDim, fontSize: 26 }}>exacto. siempre.</span>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
+              <span style={{ color: colors.textDim }}>console.log(totalCents)</span>
+              <span style={{ color: colors.textFaint }}>→</span>
+              <span
+                style={{
+                  color: colors.ok,
+                  fontWeight: 700,
+                  textShadow: `0 0 20px ${colors.okDim}`,
+                }}
+              >
+                5997
+              </span>
+            </div>
+            <span style={{ color: colors.textDim, fontSize: 26 * scale }}>exacto. siempre.</span>
           </div>
         ) : null}
 
@@ -117,9 +123,9 @@ export const SolucionScene: React.FC = () => {
             style={{
               opacity: ruleOpacity,
               marginTop: 6,
-              maxWidth: 820,
+              maxWidth: isVertical ? 880 : 820,
               textAlign: "center",
-              fontSize: 26,
+              fontSize: 26 * scale,
               color: colors.textDim,
               lineHeight: 1.6,
             }}

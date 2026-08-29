@@ -3,6 +3,7 @@ import { interpolate, useCurrentFrame } from "remotion";
 import { Scene } from "../components/Scene";
 import { CodeWindow, comment, fn, num, plain } from "../components/CodeWindow";
 import { colors, fonts } from "../theme";
+import { useOrientation } from "../useOrientation";
 
 /**
  * 00 — Intro (nueva, antepone al hook original de 0.1 + 0.2).
@@ -61,6 +62,7 @@ const fadeIn = (frame: number, start: number, dur = 24) =>
 
 export const IntroScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { isVertical, scale } = useOrientation();
 
   // ── Momento A: el código aparece primero, solo ──────────────────────────
   const codeOpacity = fadeIn(frame, 0);
@@ -123,7 +125,7 @@ export const IntroScene: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 40,
+          gap: 40 * scale,
         }}
       >
         {codeOpacity > 0 && codeExitOpacity > 0 ? (
@@ -150,15 +152,15 @@ export const IntroScene: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 26,
-              marginTop: -40,
+              gap: 26 * scale,
+              marginTop: -40 * scale,
             }}
           >
             <div
               style={{
                 opacity: labelOpacity,
                 fontFamily: fonts.mono,
-                fontSize: 24,
+                fontSize: 24 * scale,
                 color: colors.textDim,
                 letterSpacing: 1,
               }}
@@ -170,18 +172,19 @@ export const IntroScene: React.FC = () => {
             <div
               style={{
                 display: "flex",
-                gap: 60,
-                alignItems: "flex-start",
+                flexDirection: isVertical ? "column" : "row",
+                gap: isVertical ? 34 : 60,
+                alignItems: "center",
               }}
             >
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 20, color: colors.textDim, marginBottom: 10 }}>
+                <div style={{ fontSize: 20 * scale, color: colors.textDim, marginBottom: 10 }}>
                   saldo esperado
                 </div>
                 <div
                   style={{
                     fontFamily: fonts.mono,
-                    fontSize: 46,
+                    fontSize: 46 * scale,
                     fontWeight: 700,
                     color: colors.text,
                   }}
@@ -191,13 +194,13 @@ export const IntroScene: React.FC = () => {
               </div>
 
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 20, color: colors.textDim, marginBottom: 10 }}>
+                <div style={{ fontSize: 20 * scale, color: colors.textDim, marginBottom: 10 }}>
                   saldo real (JS)
                 </div>
                 <div
                   style={{
                     fontFamily: fonts.mono,
-                    fontSize: 46,
+                    fontSize: 46 * scale,
                     fontWeight: 700,
                     color: driftVisible ? colors.error : colors.text,
                     textShadow: driftVisible
@@ -214,14 +217,14 @@ export const IntroScene: React.FC = () => {
               <div
                 style={{
                   fontFamily: fonts.mono,
-                  fontSize: 22,
+                  fontSize: 22 * scale,
                   color: colors.error,
                 }}
               >
                 diferencia: {drift.toExponential(3)}
               </div>
             ) : (
-              <div style={{ fontSize: 22, color: colors.textFaint }}>
+              <div style={{ fontSize: 22 * scale, color: colors.textFaint }}>
                 por ahora, coinciden...
               </div>
             )}
@@ -232,14 +235,14 @@ export const IntroScene: React.FC = () => {
           style={{
             opacity: titleOpacity,
             textAlign: "center",
-            maxWidth: 820,
+            maxWidth: isVertical ? 900 : 820,
             padding: "0 40px",
           }}
         >
-          <div style={{ fontSize: 30, color: colors.text, lineHeight: 1.5 }}>
+          <div style={{ fontSize: 30 * scale, color: colors.text, lineHeight: 1.5 }}>
             Una operación así, sola, casi no se nota.
           </div>
-          <div style={{ fontSize: 30, color: colors.text, lineHeight: 1.5, marginTop: 6 }}>
+          <div style={{ fontSize: 30 * scale, color: colors.text, lineHeight: 1.5, marginTop: 6 }}>
             Repetida miles de veces —{" "}
             <span style={{ color: colors.error, fontWeight: 700 }}>
               con el tiempo

@@ -3,6 +3,7 @@ import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { Scene } from "../components/Scene";
 import { CodeWindow, plain } from "../components/CodeWindow";
 import { colors, fonts } from "../theme";
+import { useOrientation } from "../useOrientation";
 
 /**
  * 0:00 - 0:45 del guion → "Abre la consola y escribe esto: 0.1 + 0.2"
@@ -12,6 +13,7 @@ import { colors, fonts } from "../theme";
 export const HookScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { isVertical, scale } = useOrientation();
 
   const inputLine = [plain("0.1 + 0.2")];
 
@@ -41,7 +43,7 @@ export const HookScene: React.FC = () => {
 
   return (
     <Scene label="01 — el bug">
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 46 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 46 * scale }}>
         <CodeWindow
           title="console"
           width={780}
@@ -56,12 +58,13 @@ export const HookScene: React.FC = () => {
               opacity: resultOpacity,
               transform: `scale(${resultScale})`,
               fontFamily: fonts.mono,
-              fontSize: 56,
+              fontSize: (isVertical ? 44 : 56) * scale,
               fontWeight: 700,
               textAlign: "center",
+              padding: isVertical ? "0 30px" : undefined,
             }}
           >
-            <span style={{ color: colors.textDim, fontSize: 32 }}>{"// "}</span>
+            <span style={{ color: colors.textDim, fontSize: 32 * scale }}>{"// "}</span>
             <span style={{ color: colors.text }}>0.3</span>
             <span
               style={{
@@ -77,9 +80,9 @@ export const HookScene: React.FC = () => {
         <div style={{ opacity: titleOpacity, textAlign: "center" }}>
           <div
             style={{
-              fontSize: 30,
+              fontSize: 30 * scale,
               color: colors.textDim,
-              maxWidth: 760,
+              maxWidth: isVertical ? 820 : 760,
               lineHeight: 1.5,
             }}
           >

@@ -3,6 +3,7 @@ import { interpolate, useCurrentFrame } from "remotion";
 import { Scene } from "../components/Scene";
 import { CodeWindow, kw, num, plain } from "../components/CodeWindow";
 import { colors, fonts } from "../theme";
+import { useOrientation } from "../useOrientation";
 
 /**
  * 0:45 - 2:15 → por qué pasa (binario vs decimal) + el ejemplo clásico del
@@ -12,6 +13,7 @@ import { colors, fonts } from "../theme";
  */
 export const ExplicacionScene: React.FC = () => {
   const frame = useCurrentFrame();
+  const { isVertical, scale } = useOrientation();
 
   // Beat A: frase de concepto (0.1 no se puede escribir exacto en binario)
   const beatAOpacity = interpolate(frame, [0, 30, 380, 420], [0, 1, 1, 0], {
@@ -42,14 +44,14 @@ export const ExplicacionScene: React.FC = () => {
         <div
           style={{
             opacity: beatAOpacity,
-            maxWidth: 980,
+            maxWidth: isVertical ? 900 : 980,
             textAlign: "center",
             padding: "0 60px",
           }}
         >
           <p
             style={{
-              fontSize: 40,
+              fontSize: 40 * scale,
               lineHeight: 1.6,
               color: colors.text,
               fontWeight: 600,
@@ -58,7 +60,7 @@ export const ExplicacionScene: React.FC = () => {
             Las computadoras guardan decimales en{" "}
             <span style={{ color: colors.accent }}>binario</span>.
           </p>
-          <p style={{ fontSize: 32, lineHeight: 1.6, color: colors.textDim }}>
+          <p style={{ fontSize: 32 * scale, lineHeight: 1.6, color: colors.textDim }}>
             Así como 1/3 no es exacto en base 10, <br />
             <span style={{ color: colors.text }}>0.1</span> no es exacto en
             base 2. Se guarda <span style={{ color: colors.error }}>aproximado</span>.
@@ -73,10 +75,10 @@ export const ExplicacionScene: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 40,
+            gap: 40 * scale,
           }}
         >
-          <div style={{ fontSize: 30, color: colors.textDim, textAlign: "center" }}>
+          <div style={{ fontSize: 30 * scale, color: colors.textDim, textAlign: "center" }}>
             Un carrito con 3 productos a <span style={{ color: colors.text }}>$19.99</span>
           </div>
           <CodeWindow
@@ -96,6 +98,7 @@ export const ExplicacionScene: React.FC = () => {
 };
 
 const ResultLine: React.FC<{ frame: number }> = ({ frame }) => {
+  const { isVertical, scale } = useOrientation();
   const opacity = interpolate(frame, [0, 24], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -114,19 +117,23 @@ const ResultLine: React.FC<{ frame: number }> = ({ frame }) => {
         opacity,
         transform: `translateX(${shake}px)`,
         fontFamily: fonts.mono,
-        fontSize: 42,
+        fontSize: 42 * scale,
         display: "flex",
-        alignItems: "baseline",
-        gap: 16,
+        flexDirection: isVertical ? "column" : "row",
+        alignItems: isVertical ? "center" : "baseline",
+        gap: isVertical ? 8 : 16,
+        textAlign: "center",
       }}
     >
-      <span style={{ color: colors.textDim }}>console.log(total)</span>
-      <span style={{ color: colors.textFaint }}>→</span>
-      <span style={{ color: colors.error, fontWeight: 700 }}>
-        59.96999999999999
-      </span>
-      <span style={{ color: colors.textDim, fontSize: 26 }}>
-        {"  "}no es{" "}
+      <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
+        <span style={{ color: colors.textDim }}>console.log(total)</span>
+        <span style={{ color: colors.textFaint }}>→</span>
+        <span style={{ color: colors.error, fontWeight: 700 }}>
+          59.96999999999999
+        </span>
+      </div>
+      <span style={{ color: colors.textDim, fontSize: 26 * scale }}>
+        no es{" "}
         <span style={{ color: colors.ok, fontFamily: fonts.mono }}>59.97</span>
       </span>
     </div>
