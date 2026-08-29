@@ -1,96 +1,67 @@
 import React from "react";
-import {
-  AbsoluteFill,
-  interpolate,
-  spring,
-  useCurrentFrame,
-  useVideoConfig,
-} from "remotion";
+import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
+import { HookScene } from "./scenes/01_Hook";
+import { ExplicacionScene } from "./scenes/02_Explicacion";
+import { SolucionScene } from "./scenes/03_Solucion";
+import { SupermoneyScene } from "./scenes/04_Supermoney";
+import { CierreScene } from "./scenes/05_Cierre";
+import { sceneDurations, totalDuration } from "./theme";
 
-type Props = {
-  title: string;
-  subtitle: string;
-};
+/**
+ * Video completo: "super-money — dinero sin errores de punto flotante".
+ * Cada escena vive en su propio Sequence según las duraciones de
+ * theme.sceneDurations, en el mismo orden del guion original:
+ * gancho → explicación → solución → supermoney → cierre.
+ *
+ * El voice-over (public/audio/voiceover.mp3, generado con ElevenLabs, voz
+ * "Carolina G") dura 95.0s exactos y sceneDurations está calibrado a esa
+ * duración — ver guion-supermoney.md para el texto narrado tramo por tramo.
+ *
+ * Música de fondo (public/audio/background.mp3) suena por debajo de la voz
+ * a volumen fijo del 20%, recortada a la duración total del video con un
+ * fade-out corto al final para no cortar en seco.
+ */
+const BG_VOLUME = 0.1;
+const BG_FADE_OUT_FRAMES = 30; // 1s de fade-out al cierre
 
-export const MainVideo: React.FC<Props> = ({ title, subtitle }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+export const MainVideo: React.FC = () => {
+  const { hook, explicacion, solucion, supermoney, cierre } = sceneDurations;
 
-  // Animación de entrada del título: rebote (spring)
-  const titleSpring = spring({
-    frame,
-    fps,
-    config: {
-      damping: 12,
-      mass: 0.6,
-      stiffness: 100,
-    },
-  });
-
-  const titleScale = interpolate(titleSpring, [0, 1], [0.5, 1]);
-  const titleOpacity = interpolate(titleSpring, [0, 1], [0, 1]);
-
-  // El subtítulo aparece un poco después, con fade-in + desplazamiento
-  const subtitleDelay = 20;
-  const subtitleProgress = spring({
-    frame: frame - subtitleDelay,
-    fps,
-    config: {
-      damping: 15,
-    },
-  });
-
-  const subtitleOpacity = interpolate(subtitleProgress, [0, 1], [0, 1]);
-  const subtitleY = interpolate(subtitleProgress, [0, 1], [20, 0]);
-
-  // Fondo con gradiente que se mueve lentamente
-  const gradientAngle = interpolate(frame, [0, 150], [0, 60]);
+  const hookStart = 0;
+  const explicacionStart = hookStart + hook;
+  const solucionStart = explicacionStart + explicacion;
+  const supermoneyStart = solucionStart + solucion;
+  const cierreStart = supermoneyStart + supermoney;
 
   return (
-    <AbsoluteFill
-      style={{
-        background: `linear-gradient(${gradientAngle}deg, #1e1b4b, #7c3aed, #ec4899)`,
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Arial, Helvetica, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          transform: `scale(${titleScale})`,
-          opacity: titleOpacity,
-          textAlign: "center",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: 90,
-            color: "white",
-            fontWeight: 800,
-            margin: 0,
-            textShadow: "0 4px 20px rgba(0,0,0,0.3)",
-          }}
-        >
-          {title}
-        </h1>
-      </div>
-      <div
-        style={{
-          opacity: subtitleOpacity,
-          transform: `translateY(${subtitleY}px)`,
-          marginTop: 24,
-        }}
-      >
-        <p
-          style={{
-            fontSize: 36,
-            color: "rgba(255,255,255,0.85)",
-            margin: 0,
-          }}
-        >
-          {subtitle}
-        </p>
-      </div>
+    <AbsoluteFill>
+      <Audio src={staticFile("audio/voiceover.mp3")} />
+      <Sequence from={0} durationInFrames={totalDuration} layout="none">
+        <Audio
+          src={staticFile("audio/background.mp3")}
+          volume={(f) =>
+            f > totalDuration - BG_FADE_OUT_FRAMES
+              ? BG_VOLUME *
+                Math.max(0, (totalDuration - f) / BG_FADE_OUT_FRAMES)
+              : BG_VOLUME
+          }
+        />
+      </Sequence>
+      <Sequence from={hookStart} durationInFrames={hook} layout="none">
+        <HookScene />
+      </Sequence>
+      <Sequence from={explicacionStart} durationInFrames={explicacion} layout="none">
+        <ExplicacionScene />
+      </Sequence>
+      <Sequence from={solucionStart} durationInFrames={solucion} layout="none">
+        <SolucionScene />
+      </Sequence>
+      <Sequence from={supermoneyStart} durationInFrames={supermoney} layout="none">
+        <SupermoneyScene />
+      </Sequence>
+      <Sequence from={cierreStart} durationInFrames={cierre} layout="none">
+        <CierreScene />
+      </Sequence>
     </AbsoluteFill>
   );
 };

@@ -75,6 +75,9 @@ importers:
       '@remotion/cli':
         specifier: 4.0.286
         version: 4.0.286(postcss@8.5.26)(react-dom@18.3.1)(react@18.3.1)
+      '@remotion/google-fonts':
+        specifier: 4.0.286
+        version: 4.0.286(react-dom@18.3.1)(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -965,6 +968,15 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /@remotion/google-fonts@4.0.286(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-EUpRSCcjxz2qbmdzSj8qTmwR7YeOiKLnQHEOpo/TN1bR/d+iLi5HNndashhw6BpkA+SdFLMg4KndcZD9Hu2uOQ==}
+    dependencies:
+      remotion: 4.0.286(react-dom@18.3.1)(react@18.3.1)
+    transitivePeerDependencies:
+      - react
+      - react-dom
+    dev: false
 
   /@remotion/media-parser@4.0.286:
     resolution: {integrity: sha512-Xl4zt5qCgFktpUM6HaMd15uUZecZ1nDnCTn+j8hBHT7kN9dJwwNYz7AZM7q3+C5NKbomVAJW2hs5ELiyAZwvqQ==}

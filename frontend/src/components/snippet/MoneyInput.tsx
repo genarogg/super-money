@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
-import { activateMoneyInput, initMoneyInputs, type MoneyInputController, type MoneyConfig } from '../../func';
+import { activateMoneyInput, initMoneyInputs, type MoneyInputController, type MoneyConfig } from 'supermoney';
 // import { activateMoneyInput, initMoneyInputs, type MoneyInputController, type MoneyConfig } from 'supermoney';
 
 // ─── init global (se ejecuta una sola vez en toda la app) ─────────────────────
