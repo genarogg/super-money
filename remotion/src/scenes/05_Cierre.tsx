@@ -17,7 +17,7 @@ export const CierreScene: React.FC = () => {
   const ruleOpacity = interpolate(ruleSpring, [0, 1], [0, 1]);
   const ruleY = interpolate(ruleSpring, [0, 1], [16, 0]);
 
-  const logoDelay = 55;
+  const logoDelay = 110;
   const logoSpring = spring({
     frame: frame - logoDelay,
     fps,

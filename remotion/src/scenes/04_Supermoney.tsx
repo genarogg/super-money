@@ -14,12 +14,17 @@ import { colors, fonts, FPS } from "../theme";
  *
  * Duraciones ajustadas al voice-over real (voiceover.mp3) — ver
  * guion-supermoney.md para el texto exacto narrado en cada beat.
+ *
+ * REACT_DUR se extendió de 10s a 16s para dar tiempo al scroll animado del
+ * snippet completo de MoneyInput.tsx (antes solo se mostraba un resumen).
+ * La suma de sub-beats pasó de 43s a 49s — ver nota en theme.ts:
+ * sceneDurations.supermoney y pendiente de reajustar el audio.
  */
 const INTRO_DUR = 4 * FPS;
 const ATM_DUR = 6 * FPS;
 const HTML_DUR = 8 * FPS;
 const INSTALL_DUR = 6 * FPS;
-const REACT_DUR = 10 * FPS;
+const REACT_DUR = 16 * FPS;
 const SHOW_DUR = 3 * FPS;
 const STRING_DUR = 3 * FPS;
 const LIMIT_DUR = 3 * FPS;
@@ -77,7 +82,7 @@ export const SupermoneyScene: React.FC = () => {
   );
 };
 
-const fadeIn = (frame: number, dur = 15) =>
+const fadeIn = (frame: number, dur = 30) =>
   interpolate(frame, [0, dur], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -114,12 +119,12 @@ const AtmBeat: React.FC = () => {
   const frame = useCurrentFrame();
   const titleOpacity = fadeIn(frame);
   // teclas: 1, 9, 9, 9 → $19.99, espaciadas para que se vean entrar una por una
-  const keyFrames = [40, 55, 70, 85];
+  const keyFrames = [80, 110, 140, 170];
 
-  const eventStart = 130;
+  const eventStart = 260;
   const eventOpacity = interpolate(
     frame,
-    [eventStart, eventStart + 15],
+    [eventStart, eventStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
@@ -153,25 +158,25 @@ const HtmlVanillaBeat: React.FC = () => {
   const frame = useCurrentFrame();
   const titleOpacity = fadeIn(frame);
 
-  const codeStart = 20;
+  const codeStart = 40;
   const codeOpacity = interpolate(
     frame,
-    [codeStart, codeStart + 15],
+    [codeStart, codeStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
-  const noteStart = codeStart + 130;
+  const noteStart = codeStart + 260;
   const noteOpacity = interpolate(
     frame,
-    [noteStart, noteStart + 15],
+    [noteStart, noteStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
   // Un solo archivo .html, sin bundler, sin npm install: <script> por CDN
   // + auto-inicialización de los inputs money del DOM. Este es el ejemplo
-  // que demuestra que supermoney funciona en CUALQUIER stack — PHP, Rails,
+  // que demuestra que supermoney funciona en CUALQUIER stack — PHP, Django,
   // WordPress, un HTML servido por Python, lo que sea — porque no depende
   // de nada más que el navegador cargando un <script>.
   const htmlLines = [
@@ -232,7 +237,7 @@ const HtmlVanillaBeat: React.FC = () => {
           Sin <span style={{ color: colors.text }}>npm install</span>, sin
           bundler. El{" "}
           <span style={{ color: colors.accent }}>{"<script>"}</span> se
-          carga en el DOM y ya — funciona igual en PHP, Rails, WordPress o
+          carga en el DOM y ya — funciona igual en PHP, Django, WordPress o
           cualquier backend que sirva HTML.
         </div>
       ) : null}
@@ -244,18 +249,18 @@ const InstallBeat: React.FC = () => {
   const frame = useCurrentFrame();
   const titleOpacity = fadeIn(frame);
 
-  const codeStart = 15;
+  const codeStart = 30;
   const codeOpacity = interpolate(
     frame,
-    [codeStart, codeStart + 15],
+    [codeStart, codeStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
-  const noteStart = codeStart + 80;
+  const noteStart = codeStart + 160;
   const noteOpacity = interpolate(
     frame,
-    [noteStart, noteStart + 15],
+    [noteStart, noteStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
@@ -314,72 +319,369 @@ const ReactBeat: React.FC = () => {
   const frame = useCurrentFrame();
   const titleOpacity = fadeIn(frame);
 
-  // Momento A: el wrapper MoneyInput.tsx (activateMoneyInput + eventos DOM
-  // reenviados como props de React). Se queda en pantalla y luego el
-  // componente entero se desliza para dar paso al ejemplo de uso.
-  const wrapperStart = 15;
+  // Momento A: el wrapper MoneyInput.tsx completo, con scroll animado
+  // (el archivo real tiene ~115 líneas y no cabe entero en pantalla a un
+  // tamaño legible). Se queda visible, hace scroll de arriba a abajo, y
+  // luego el componente entero se desliza para dar paso al ejemplo de uso.
+  const wrapperStart = 30;
   const wrapperOpacity = interpolate(
     frame,
-    [wrapperStart, wrapperStart + 15],
+    [wrapperStart, wrapperStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
+  // Ventana visible del código: alto fijo, el contenido se desplaza dentro.
+  const CODE_MAX_HEIGHT = 560;
+  const LINE_HEIGHT_PX = 16 * 1.65; // debe coincidir con fontSize del CodeWindow
+
   // Momento B: el <MoneyInput /> ya integrado en un formulario JSX.
-  const usageStart = 140;
+  const usageStart = 680;
   const usageOpacity = interpolate(
     frame,
-    [usageStart, usageStart + 15],
+    [usageStart, usageStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
   const wrapperExitOpacity = interpolate(
     frame,
-    [usageStart - 15, usageStart],
+    [usageStart - 30, usageStart],
     [1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
-  const noteStart = usageStart + 100;
+  const noteStart = usageStart + 200;
   const noteOpacity = interpolate(
     frame,
-    [noteStart, noteStart + 15],
+    [noteStart, noteStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
+  // Scroll: empieza un momento después de que el código aparece, se
+  // desplaza a ritmo constante durante el resto del Momento A, y llega al
+  // final justo antes de que el wrapper empiece a desvanecerse.
+  const scrollStartFrame = wrapperStart + 80;
+  const scrollEndFrame = usageStart - 80;
+
   const wrapperLines = [
+    // ─── imports ───
+    [
+      kw("import"),
+      plain(" { useRef, useEffect, useCallback } "),
+      kw("from"),
+      plain(" "),
+      str("'react'"),
+      plain(";"),
+    ],
+    [
+      kw("import"),
+      plain(" {"),
+    ],
+    [
+      plain("  activateMoneyInput,"),
+    ],
+    [
+      plain("  initMoneyInputs,"),
+    ],
+    [
+      kw("  type"),
+      plain(" MoneyInputController,"),
+    ],
+    [
+      kw("  type"),
+      plain(" MoneyConfig,"),
+    ],
+    [
+      plain("} "),
+      kw("from"),
+      plain(" "),
+      str("'supermoney'"),
+      plain(";"),
+    ],
+    [plain("")],
+    [comment("// ─── init global (se ejecuta una sola vez en toda la app) ───")],
+    [kw("let"), plain(" globalInitDone = "), kw("false"), plain(";")],
+    [plain("")],
     [
       kw("const"),
-      plain(" ctrl "),
-      plain("= "),
-      fn("activateMoneyInput"),
-      plain("(input);"),
+      plain(" ensureGlobalInit = ("),
+      plain("config"),
+      plain("?: MoneyConfig) => {"),
     ],
+    [plain("  "), kw("if"), plain(" (globalInitDone) "), kw("return"), plain(";")],
+    [plain("  globalInitDone = "), kw("true"), plain(";")],
+    [plain("  "), fn("initMoneyInputs"), plain("(config);")],
+    [plain("};")],
     [plain("")],
+    [comment("// ─── Props ───")],
     [
-      plain("input."),
-      fn("addEventListener"),
-      plain("("),
-      str("'money-input'"),
-      plain(", (e) => {"),
-    ],
-    [plain("  "), fn("onChangeCents"), plain("?.(e.detail.value);")],
-    [plain("});")],
-    [plain("")],
-    [
-      plain("input."),
-      fn("addEventListener"),
-      plain("("),
-      str("'money-change'"),
-      plain(", (e) => {"),
+      kw("export interface"),
+      plain(" MoneyInputProps"),
     ],
     [
       plain("  "),
-      fn("onMoneyChange"),
-      plain("?.(e.detail.value, e.detail.formatted);"),
+      kw("extends"),
+      plain(" Omit<React.InputHTMLAttributes<HTMLInputElement>,"),
     ],
-    [plain("});")],
+    [plain("    "), str("'onChange' | 'value' | 'type' | 'onBlur'"), plain("> {")],
+    [
+      plain("  "),
+      plain("valueCents"),
+      plain("?: "),
+      fn("number"),
+      plain(";"),
+    ],
+    [
+      plain("  "),
+      plain("onChangeCents"),
+      plain("?: (cents: "),
+      fn("number"),
+      plain(") => "),
+      kw("void"),
+      plain(";"),
+    ],
+    [
+      plain("  "),
+      plain("onMoneyChange"),
+      plain("?: (cents: "),
+      fn("number"),
+      plain(", formatted: "),
+      fn("string"),
+      plain(") => "),
+      kw("void"),
+      plain(";"),
+    ],
+    [
+      plain("  "),
+      plain("decimals"),
+      plain("?: "),
+      fn("number"),
+      plain(";"),
+    ],
+    [
+      plain("  "),
+      plain("symbol"),
+      plain("?: "),
+      fn("string"),
+      plain(";"),
+    ],
+    [
+      plain("  "),
+      plain("config"),
+      plain("?: MoneyConfig;"),
+    ],
+    [plain("}")],
+    [plain("")],
+    [comment("// ─── Componente ───")],
+    [kw("const"), plain(" MoneyInput = ({")],
+    [plain("  valueCents,")],
+    [plain("  onChangeCents,")],
+    [plain("  onMoneyChange,")],
+    [plain("  decimals,")],
+    [plain("  symbol,")],
+    [plain("  config,")],
+    [plain("  id,")],
+    [plain("  className,")],
+    [plain("  disabled,")],
+    [plain("  ...rest")],
+    [plain("}: MoneyInputProps) => {")],
+    [
+      plain("  "),
+      kw("const"),
+      plain(" inputRef = "),
+      fn("useRef"),
+      plain("<HTMLInputElement>("),
+      kw("null"),
+      plain(");"),
+    ],
+    [
+      plain("  "),
+      kw("const"),
+      plain(" ctrlRef = "),
+      fn("useRef"),
+      plain("<MoneyInputController | "),
+      kw("null"),
+      plain(">("),
+      kw("null"),
+      plain(");"),
+    ],
+    [plain("")],
+    [comment("  // Init global + activar este input al montar")],
+    [
+      plain("  "),
+      fn("useEffect"),
+      plain("(() => {"),
+    ],
+    [plain("    "), fn("ensureGlobalInit"), plain("(config);")],
+    [plain("    "), kw("const"), plain(" input = inputRef.current;")],
+    [plain("    "), kw("if"), plain(" (!input) "), kw("return"), plain(";")],
+    [plain("    ctrlRef.current = "), fn("activateMoneyInput"), plain("(input);")],
+    [plain("  }, []);")],
+    [plain("")],
+    [comment("  // Sincronizar valueCents externo → input interno")],
+    [
+      plain("  "),
+      fn("useEffect"),
+      plain("(() => {"),
+    ],
+    [plain("    "), kw("const"), plain(" ctrl = ctrlRef.current;")],
+    [
+      plain("    "),
+      kw("if"),
+      plain(" (!ctrl || valueCents === "),
+      kw("undefined"),
+      plain(") "),
+      kw("return"),
+      plain(";"),
+    ],
+    [
+      plain("    "),
+      kw("if"),
+      plain(" (ctrl."),
+      fn("getCents"),
+      plain("() !== valueCents) ctrl."),
+      fn("setCents"),
+      plain("(valueCents, "),
+      kw("false"),
+      plain(");"),
+    ],
+    [plain("  }, [valueCents]);")],
+    [plain("")],
+    [comment("  // money-input → onChangeCents (cada tecla)")],
+    [
+      plain("  "),
+      kw("const"),
+      plain(" handleMoneyInput = "),
+      fn("useCallback"),
+      plain("("),
+    ],
+    [
+      plain("    (e: CustomEvent<{ value: "),
+      fn("number"),
+      plain(" }>) => {"),
+    ],
+    [plain("      onChangeCents?.(e.detail.value);")],
+    [plain("    },")],
+    [plain("    [onChangeCents],")],
+    [plain("  );")],
+    [plain("")],
+    [comment("  // money-change → onMoneyChange (al perder foco)")],
+    [
+      plain("  "),
+      kw("const"),
+      plain(" handleMoneyChange = "),
+      fn("useCallback"),
+      plain("("),
+    ],
+    [
+      plain("    (e: CustomEvent<{ value: "),
+      fn("number"),
+      plain("; formatted: "),
+      fn("string"),
+      plain(" }>) => {"),
+    ],
+    [plain("      onMoneyChange?.(e.detail.value, e.detail.formatted);")],
+    [plain("    },")],
+    [plain("    [onMoneyChange],")],
+    [plain("  );")],
+    [plain("")],
+    [
+      plain("  "),
+      fn("useEffect"),
+      plain("(() => {"),
+    ],
+    [plain("    "), kw("const"), plain(" input = inputRef.current;")],
+    [plain("    "), kw("if"), plain(" (!input) "), kw("return"), plain(";")],
+    [
+      plain("    "),
+      kw("const"),
+      plain(" onInput = (e: Event) => "),
+      fn("handleMoneyInput"),
+      plain("(e "),
+      kw("as"),
+      plain(" CustomEvent<{ value: "),
+      fn("number"),
+      plain(" }>);"),
+    ],
+    [
+      plain("    "),
+      kw("const"),
+      plain(" onChanged = (e: Event) =>"),
+    ],
+    [
+      plain("      "),
+      fn("handleMoneyChange"),
+      plain("(e "),
+      kw("as"),
+      plain(" CustomEvent<{ value: "),
+      fn("number"),
+      plain("; formatted: "),
+      fn("string"),
+      plain(" }>);"),
+    ],
+    [
+      plain("    input."),
+      fn("addEventListener"),
+      plain("("),
+      str("'money-input'"),
+      plain(", onInput);"),
+    ],
+    [
+      plain("    input."),
+      fn("addEventListener"),
+      plain("("),
+      str("'money-change'"),
+      plain(", onChanged);"),
+    ],
+    [plain("    "), kw("return"), plain(" () => {")],
+    [
+      plain("      input."),
+      fn("removeEventListener"),
+      plain("("),
+      str("'money-input'"),
+      plain(", onInput);"),
+    ],
+    [
+      plain("      input."),
+      fn("removeEventListener"),
+      plain("("),
+      str("'money-change'"),
+      plain(", onChanged);"),
+    ],
+    [plain("    };")],
+    [plain("  }, [handleMoneyInput, handleMoneyChange]);")],
+    [plain("")],
+    [plain("  "), kw("return"), plain(" (")],
+    [
+      plain("    <div className={"),
+      str("`money-input-wrapper${className ? ` ${className}` : ''}`"),
+      plain("}>"),
+    ],
+    [
+      plain("      {symbol && <span className="),
+      str('"money-input-symbol"'),
+      plain(">{symbol}</span>}"),
+    ],
+    [plain("      <input")],
+    [plain("        {...rest}")],
+    [plain("        ref={inputRef}")],
+    [plain("        id={id}")],
+    [plain("        type="), str('"money"'), plain("")],
+    [plain("        disabled={disabled}")],
+    [
+      plain("        {...(decimals !== "),
+      kw("undefined"),
+      plain(" ? { decimals: "),
+      fn("String"),
+      plain("(decimals) } : {})}"),
+    ],
+    [plain("      />")],
+    [plain("    </div>")],
+    [plain("  );")],
+    [plain("};")],
+    [plain("")],
+    [kw("export default"), plain(" MoneyInput;")],
   ];
 
   const usageLines = [
@@ -439,9 +741,22 @@ const ReactBeat: React.FC = () => {
             <CodeWindow
               title="MoneyInput.tsx"
               width={760}
-              fontSize={19}
+              fontSize={16}
               lines={wrapperLines}
               dot="ok"
+              maxHeight={CODE_MAX_HEIGHT}
+              scrollY={interpolate(
+                frame,
+                [scrollStartFrame, scrollEndFrame],
+                [
+                  0,
+                  Math.max(
+                    0,
+                    wrapperLines.length * LINE_HEIGHT_PX - CODE_MAX_HEIGHT + 52,
+                  ),
+                ],
+                { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+              )}
             />
           </div>
         ) : null}
@@ -493,18 +808,18 @@ const ShowMoneyBeat: React.FC = () => {
   const frame = useCurrentFrame();
   const titleOpacity = fadeIn(frame);
 
-  const codeStart = 10;
+  const codeStart = 20;
   const codeOpacity = interpolate(
     frame,
-    [codeStart, codeStart + 10],
+    [codeStart, codeStart + 20],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
-  const resultStart = codeStart + 25;
+  const resultStart = codeStart + 50;
   const resultOpacity = interpolate(
     frame,
-    [resultStart, resultStart + 15],
+    [resultStart, resultStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
@@ -549,18 +864,18 @@ const MoneyToStringBeat: React.FC = () => {
   const frame = useCurrentFrame();
   const titleOpacity = fadeIn(frame);
 
-  const codeStart = 10;
+  const codeStart = 20;
   const codeOpacity = interpolate(
     frame,
-    [codeStart, codeStart + 10],
+    [codeStart, codeStart + 20],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
-  const resultStart = codeStart + 25;
+  const resultStart = codeStart + 50;
   const resultOpacity = interpolate(
     frame,
-    [resultStart, resultStart + 15],
+    [resultStart, resultStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );

@@ -17,6 +17,33 @@ alargar el video total.
 
 Duración total: **1:35** (95s).
 
+**Pendiente:** se agregó una escena nueva `00 — Intro` (12s) *antes* del bug
+original, para plantear el tema desde "qué pasa con el tiempo" antes de
+mostrar el bug puntual de 0.1 + 0.2. Su línea de voz **ya está incluida**
+en el "Texto corrido" de más abajo, pero el audio (`voiceover.mp3`)
+**todavía no se regeneró** con ese texto — sigue siendo la grabación vieja
+de 95.0s, que no tiene esta línea. Además el texto corrido también
+incorporó la corrección de la línea del HTML vanilla (ver nota en esa
+sección). Hasta que se regenere el audio y se reajusten `sceneDurations` /
+`04_Supermoney.tsx` con la nueva duración, el video (113s antes de
+transiciones, 110s reales) no va a cuadrar con el audio actual (95s). Ver
+sección "00 — Intro" y "Texto corrido" más abajo.
+
+---
+
+## 00 — Intro (0:00 – 0:12, sub-tiempos del guion original recorridos +12s)
+
+> Una suma con decimales, una sola vez, casi no se nota. Pero repetida miles de veces, día tras día, el error se acumula — hasta que ya no puedes ignorarlo.
+
+En pantalla: un fragmento de código (`saldo.js`) que suma 0.10 en un `for`
+durante 3000 "días" (un depósito diario, o cualquier operación recurrente).
+Luego un contador de días avanza rápido y se muestran dos saldos en
+paralelo — el "esperado" (día × 0.10) y el "real" (el resultado de la suma
+en punto flotante) — que empiezan iguales y terminan separados por un
+resto de `~2.8e-13`, visible solo al mostrar todos los decimales. Cierra con
+el texto: *"Una operación así, sola, casi no se nota. Repetida miles de
+veces — con el tiempo — se vuelve un problema real."*
+
 ---
 
 ## 01 — El bug (0:00 – 0:12)
@@ -40,7 +67,7 @@ Duración total: **1:35** (95s).
 > El input funciona como un cajero: cada tecla arma el monto de derecha a izquierda, y entrega el valor en centavos.
 
 ### 2. Un solo HTML, sin build (0:55 – 1:03)
-> Ni siquiera necesitas un proyecto: un HTML, un input, un script por CDN. Funciona en PHP, Rails, WordPress, donde sea.
+> No necesitas un bundler ni un paso de build: un HTML, un input, un script por CDN. Funciona en PHP, Django, WordPress, donde sea.
 
 ### 3. Instalación con pnpm (1:03 – 1:09)
 > *(sin narración — beat puramente visual)*
@@ -68,6 +95,8 @@ Duración total: **1:35** (95s).
 ## Texto corrido (para reusar en ElevenLabs si se regenera el audio)
 
 ```
+Una suma con decimales, una sola vez, casi no se nota. Pero repetida miles de veces, día tras día, el error se acumula — hasta que ya no puedes ignorarlo.
+
 Escribe en la consola: cero punto uno, más cero punto dos. El resultado no es cero punto tres — trae un cuatro perdido al final. Bienvenido al punto flotante.
 
 Las computadoras guardan decimales en binario, y no todos son exactos. Un carrito de tres productos a diecinueve noventa y nueve no da cincuenta y nueve con noventa y siete... da un número con nueves de más. El error se acumula.
@@ -78,7 +107,7 @@ Ese principio, en una librería, es super... money. Siempre enteros.
 
 El input funciona como un cajero: cada tecla arma el monto de derecha a izquierda, y entrega el valor en centavos.
 
-Ni siquiera necesitas un proyecto: un HTML, un input, un script por CDN. Funciona en PHP, Rails, WordPress, donde sea.
+No necesitas un bundler ni un paso de build: un HTML, un input, un script por CDN. Funciona en PHP, Django, WordPress, donde sea.
 
 Con React, un componente activa ese input y reenvía sus eventos como props: onChangeCents, onMoneyChange. Se usa como cualquier input controlado, y sigue siempre en enteros.
 
@@ -88,6 +117,16 @@ Y el límite real es Number punto MAX_SAFE_INTEGER — donde hasta un entero dej
 
 La regla no es "cuidado con los decimales". Es: no calcules con decimales. Guarda enteros. Super... money.
 ```
+
+**Nota sobre este bloque:** ya incluye la línea de la escena `00 — Intro`
+al principio (antes solo estaba como propuesta suelta más abajo) y la
+línea del HTML vanilla corregida — "no necesitas un proyecto" se cambió
+porque un HTML con `<script>` sigue siendo un proyecto, solo que sin paso
+de build; y "Rails" se cambió por "Django". Si generás el audio con este
+texto, la duración ya NO va a ser 95.0s — medila con `ffprobe` y seguí los
+pasos de "Si se necesita regenerar el audio" más abajo para redistribuir
+`sceneDurations`.
+
 
 ## Datos del audio
 

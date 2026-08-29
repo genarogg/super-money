@@ -13,29 +13,29 @@ import { colors, fonts } from "../theme";
 export const SolucionScene: React.FC = () => {
   const frame = useCurrentFrame();
 
-  const titleOpacity = interpolate(frame, [0, 15], [0, 1], {
+  const titleOpacity = interpolate(frame, [0, 30], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  const codeStart = 45;
-  const codeOpacity = interpolate(frame, [codeStart, codeStart + 15], [0, 1], {
+  const codeStart = 90;
+  const codeOpacity = interpolate(frame, [codeStart, codeStart + 30], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  const resultStart = codeStart + 70;
+  const resultStart = codeStart + 140;
   const resultOpacity = interpolate(
     frame,
-    [resultStart, resultStart + 15],
+    [resultStart, resultStart + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
-  const ruleStart = resultStart + 45;
+  const ruleStart = resultStart + 90;
   const ruleOpacity = interpolate(
     frame,
-    [ruleStart, ruleStart + 20],
+    [ruleStart, ruleStart + 40],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );

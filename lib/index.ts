@@ -7,6 +7,8 @@ import {
     activateMoneyInput
 } from '../frontend/src/func/index';
 
+import InputMoney from '../frontend/src/components/snippet/MoneyInput';
+
 import type { MoneyConfig, MoneyInputController } from '../frontend/src/func/index';
 
 export {
@@ -15,6 +17,7 @@ export {
     moneyToString,
     montoNoNegativo,
     setMoneyConfig,
-    activateMoneyInput
+    activateMoneyInput,
+    InputMoney
 };
 export type { MoneyConfig, MoneyInputController };

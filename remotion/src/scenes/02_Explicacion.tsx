@@ -14,26 +14,26 @@ export const ExplicacionScene: React.FC = () => {
   const frame = useCurrentFrame();
 
   // Beat A: frase de concepto (0.1 no se puede escribir exacto en binario)
-  const beatAOpacity = interpolate(frame, [0, 15, 190, 210], [0, 1, 1, 0], {
+  const beatAOpacity = interpolate(frame, [0, 30, 380, 420], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
   // Beat B: el código del carrito, entra cuando A se está yendo
-  const beatBStart = 200;
+  const beatBStart = 400;
   const beatBOpacity = interpolate(
     frame,
-    [beatBStart, beatBStart + 20],
+    [beatBStart, beatBStart + 40],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
   const bFrame = frame - beatBStart;
 
   const cartLines = [
-    [kw("let "), plain("total = "), num("0"), plain(";")],
-    [plain("total += "), num("19.99"), plain(";")],
-    [plain("total += "), num("19.99"), plain(";")],
-    [plain("total += "), num("19.99"), plain(";")],
+    <React.Fragment key="l0">{kw("let ")}{plain("total = ")}{num("0")}{plain(";")}</React.Fragment>,
+    <React.Fragment key="l1">{plain("total += ")}{num("19.99")}{plain(";")}</React.Fragment>,
+    <React.Fragment key="l2">{plain("total += ")}{num("19.99")}{plain(";")}</React.Fragment>,
+    <React.Fragment key="l3">{plain("total += ")}{num("19.99")}{plain(";")}</React.Fragment>,
   ];
 
   return (
@@ -86,8 +86,8 @@ export const ExplicacionScene: React.FC = () => {
             lines={cartLines}
           />
 
-          {bFrame > 60 ? (
-            <ResultLine frame={bFrame - 60} />
+          {bFrame > 120 ? (
+            <ResultLine frame={bFrame - 120} />
           ) : null}
         </div>
       ) : null}
@@ -96,13 +96,13 @@ export const ExplicacionScene: React.FC = () => {
 };
 
 const ResultLine: React.FC<{ frame: number }> = ({ frame }) => {
-  const opacity = interpolate(frame, [0, 12], [0, 1], {
+  const opacity = interpolate(frame, [0, 24], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
   const shake =
-    frame < 40
-      ? Math.sin(frame * 1.4) * interpolate(frame, [0, 10, 40], [4, 4, 0], {
+    frame < 80
+      ? Math.sin(frame * 0.7) * interpolate(frame, [0, 20, 80], [4, 4, 0], {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
         })

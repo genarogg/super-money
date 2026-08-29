@@ -17,7 +17,7 @@ export const HookScene: React.FC = () => {
 
   // El resultado aparece después de una pequeña pausa, como si la consola
   // "pensara" un instante antes de mostrar el número raro.
-  const resultDelay = 40;
+  const resultDelay = 80;
   const resultSpring = spring({
     frame: frame - resultDelay,
     fps,
@@ -28,13 +28,13 @@ export const HookScene: React.FC = () => {
 
   // Los dígitos "de más" (todo después de 0.3) laten en rojo para que el ojo
   // los encuentre de inmediato.
-  const pulse = Math.sin((frame - resultDelay) / 6) * 0.5 + 0.5;
+  const pulse = Math.sin((frame - resultDelay) / 12) * 0.5 + 0.5;
 
   // Titular final, entra tarde para no competir con el número
-  const titleDelay = 80;
+  const titleDelay = 160;
   const titleOpacity = interpolate(
     frame,
-    [titleDelay, titleDelay + 15],
+    [titleDelay, titleDelay + 30],
     [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );

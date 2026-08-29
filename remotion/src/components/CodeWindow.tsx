@@ -10,6 +10,16 @@ type Props = {
   width?: number;
   fontSize?: number;
   dot?: "error" | "ok" | "neutral";
+  /**
+   * Si se define, el cuerpo de código queda con altura fija y overflow
+   * oculto (efecto "ventana recortada"), y `scrollY` controla cuánto se
+   * desplaza el contenido hacia arriba (en px). Úsalo con un `scrollY`
+   * interpolado por frame en el componente que llama para lograr un
+   * scroll animado cuando el archivo no cabe entero en pantalla.
+   */
+  maxHeight?: number;
+  /** Desplazamiento vertical del contenido, en px. Requiere `maxHeight`. */
+  scrollY?: number;
 };
 
 /**
@@ -23,6 +33,8 @@ export const CodeWindow: React.FC<Props> = ({
   width = 900,
   fontSize = 28,
   dot = "neutral",
+  maxHeight,
+  scrollY = 0,
 }) => {
   const frame = useCurrentFrame();
 
@@ -78,37 +90,46 @@ export const CodeWindow: React.FC<Props> = ({
       </div>
       <div
         style={{
-          padding: "26px 30px",
-          fontFamily: fonts.mono,
-          fontSize,
-          lineHeight: 1.65,
+          padding: maxHeight ? "0" : "26px 30px",
+          height: maxHeight,
+          overflow: maxHeight ? "hidden" : undefined,
         }}
       >
-        {lines.map((line, i) => {
-          const startFrame = lineStartFrames?.[i] ?? 0;
-          const localFrame = frame - startFrame;
-          const opacity = interpolate(localFrame, [0, 10], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          });
-          const x = interpolate(localFrame, [0, 10], [-14, 0], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          });
-          return (
-            <div
-              key={i}
-              style={{
-                opacity,
-                transform: `translateX(${x}px)`,
-                whiteSpace: "pre",
-                color: colors.text,
-              }}
-            >
-              {line}
-            </div>
-          );
-        })}
+        <div
+          style={{
+            padding: maxHeight ? "26px 30px" : 0,
+            fontFamily: fonts.mono,
+            fontSize,
+            lineHeight: 1.65,
+            transform: maxHeight ? `translateY(${-scrollY}px)` : undefined,
+          }}
+        >
+          {lines.map((line, i) => {
+            const startFrame = lineStartFrames?.[i] ?? 0;
+            const localFrame = frame - startFrame;
+            const opacity = interpolate(localFrame, [0, 20], [0, 1], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            });
+            const x = interpolate(localFrame, [0, 20], [-14, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            });
+            return (
+              <div
+                key={i}
+                style={{
+                  opacity,
+                  transform: `translateX(${x}px)`,
+                  whiteSpace: "pre",
+                  color: colors.text,
+                }}
+              >
+                {line}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

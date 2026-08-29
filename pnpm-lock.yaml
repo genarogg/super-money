@@ -78,6 +78,9 @@ importers:
       '@remotion/google-fonts':
         specifier: 4.0.286
         version: 4.0.286(react-dom@18.3.1)(react@18.3.1)
+      '@remotion/transitions':
+        specifier: 4.0.286
+        version: 4.0.286(react-dom@18.3.1)(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -993,6 +996,10 @@ packages:
       remotion: 4.0.286(react-dom@18.3.1)(react@18.3.1)
     dev: false
 
+  /@remotion/paths@4.0.286:
+    resolution: {integrity: sha512-k3aSus3QKdGEeCtSnDM8eDMuCu15Fc8mWP0c4Jpe5CSt518hsg58iJHmtlHSGHF8/TduF7+GpjrCJ4VOggHbuw==}
+    dev: false
+
   /@remotion/player@4.0.286(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-T+DRPoMEqZajc7ITU6/46R4EcufpL7vKKWPJLxEmqikkluaFe3uL0Ms3qOI1DddvhfJyHPnJt6NS+J31rp81kw==}
     peerDependencies:
@@ -1030,6 +1037,17 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /@remotion/shapes@4.0.286(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-rgnZnoa8bakkL6vyfNDLdOL8ueXdPoiHBz0YiGBO3UGboqEHirV4cLD03ncB9NAgcLLmfWy1bloBQiLwzX+ySg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@remotion/paths': 4.0.286
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /@remotion/streaming@4.0.286:
@@ -1102,6 +1120,19 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /@remotion/transitions@4.0.286(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-K+Bj9OE5e5+b6B81cxYlug7y0kBasQAS+RppXY0TYvFv+Qb+bGJUKggtWrYp9leUtNkRR14llpwxMvtNGfBffw==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@remotion/paths': 4.0.286
+      '@remotion/shapes': 4.0.286(react-dom@18.3.1)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      remotion: 4.0.286(react-dom@18.3.1)(react@18.3.1)
     dev: false
 
   /@remotion/zod-types@4.0.286(react-dom@18.3.1)(react@18.3.1)(zod@3.22.3):

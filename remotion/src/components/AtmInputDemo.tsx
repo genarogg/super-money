@@ -36,7 +36,7 @@ export const AtmInputDemo: React.FC<Props> = ({ keyFrames }) => {
   }
 
   const flashFrame = frame - (keyFrames[activeKeyIndex] ?? -999);
-  const flash = interpolate(flashFrame, [0, 8, 20], [1, 0.4, 0], {
+  const flash = interpolate(flashFrame, [0, 16, 40], [1, 0.4, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -84,7 +84,7 @@ export const AtmInputDemo: React.FC<Props> = ({ keyFrames }) => {
             height: 44,
             marginLeft: 8,
             background: colors.accent,
-            opacity: Math.sin(frame / 4) > 0 ? 1 : 0,
+            opacity: Math.sin(frame / 8) > 0 ? 1 : 0,
             verticalAlign: "middle",
           }}
         />
