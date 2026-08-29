@@ -65,6 +65,10 @@ importers:
         version: 8.2.2(@types/node@24.13.3)
 
   lib:
+    optionalDependencies:
+      react:
+        specifier: ^18 || ^19
+        version: 19.2.8
     devDependencies:
       tsup:
         specifier: ^8.5.1

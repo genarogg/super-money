@@ -13,7 +13,7 @@
     "lucide-react": "^1.16.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "supermoney": "workspace:^"
+    "supermoney": "^2.0.5"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
