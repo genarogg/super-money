@@ -33,7 +33,7 @@ import { colors, fonts, FPS } from "../theme";
 const INTRO_DUR = 4 * FPS;
 const ATM_DUR = 8 * FPS;
 const HTML_DUR = 10 * FPS;
-const INSTALL_DUR = 5 * FPS;
+const INSTALL_DUR = 6 * FPS;
 const REACT_DUR = 11 * FPS;
 const SHOW_DUR = 2 * FPS;
 const STRING_DUR = 4 * FPS;

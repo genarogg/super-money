@@ -7,6 +7,9 @@
     "dev": "remotion studio --port 9000",
     "start": "remotion studio --port 9000",
     "build": "remotion render src/index.ts MainVideo out/video.mp4",
+    "build:landscape": "remotion render src/index.ts MainVideo out/video-16x9.mp4",
+    "build:vertical": "remotion render src/index.ts MainVideoVertical out/video-9x16.mp4",
+    "build:all": "npm run build:landscape && npm run build:vertical",
     "lint": "tsc -b --noEmit"
   },
   "dependencies": {

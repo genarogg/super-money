@@ -70,7 +70,7 @@ export const sceneDurations = {
   hook: 12 * FPS, // 0:00 - 0:12 → gancho: 0.1 + 0.2
   explicacion: 16 * FPS, // problema explicado + ejemplo del carrito
   solucion: 17 * FPS, // guardar todo en enteros
-  supermoney: 58 * FPS, // qué es supermoney: input, HTML vanilla, instalación pnpm (con voz), integración React (import { InputMoney } from "supermoney"), showMoney, moneyToString, límite — timing por beat recalculado a la narración real
+  supermoney: 54 * FPS, // qué es supermoney: input, HTML vanilla, instalación pnpm (con voz), integración React (import { InputMoney } from "supermoney"), showMoney, moneyToString, límite — timing por beat recalculado a la narración real; 54s = suma exacta de los 8 sub-beats en 04_Supermoney.tsx (INTRO 4 + ATM 8 + HTML 10 + INSTALL 6 + REACT 11 + SHOW 2 + STRING 4 + LIMIT 9)
   cierre: 7 * FPS, // cierre
 } as const;
 
