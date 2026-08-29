@@ -1,98 +1,121 @@
-# Guion de voz en off — video "supermoney"
+# Guion sincronizado — video "supermoney"
 
-Este es el texto **final y ya locutado** — corresponde exactamente al audio en
-`public/audio/voiceover.mp3` (ElevenLabs, voz "Carolina G — Voz femenina
-versátil Pro", 95.0 segundos). Las duraciones de las escenas en
-`src/theme.ts` y `src/scenes/04_Supermoney.tsx` están calibradas a este
-audio, así que si el texto cambia en el futuro hay que regenerar el audio
-**y** reajustar `sceneDurations` / las duraciones de sub-beats para que
-sigan sumando 95.0s (2850 frames a 30fps).
+Duración total del video: **1:55 (115s / 6900 frames a 60fps)**, incluyendo
+1s de aire inicial (`LEAD_IN_DURATION`, ver `theme.ts`) donde no hay ni
+imagen ni voz. Los tiempos de abajo son **absolutos** (ya cuentan ese
+segundo de silencio) y ya restan el solape de las transiciones crossZoom
+(0.6s cada una).
 
-**Nota:** el beat "Instalación con pnpm" (0:03 dentro de la escena
-supermoney) se agregó después de generar el audio y no tiene línea de voz
-propia — es un tramo puramente visual con música de fondo. Para que el
-video siguiera cuadrando con los 95.0s del audio ya grabado, se le restó
-tiempo a `AtmBeat` y `LimitBeat` (que tenían margen de sobra) en vez de
-alargar el video total.
+**Importante:** este guion no coincide en duración con el
+`voiceover.mp3` actual (95.0s) — el video real mide ahora 120s. Hay que
+regenerar el audio con este texto y luego, si la duración cambia,
+reajustar `sceneDurations` en `theme.ts` proporcionalmente (ver sección
+final).
 
-Duración total: **1:35** (95s).
+**Cambio de esta revisión — el beat de instalación con pnpm ganó voz, y
+se corrigió un desincronizado real en el beat de React:**
+- El beat "Instalación con pnpm" era puramente visual (sin narración).
+  Ahora lleva la línea "Su instalación es muy sencilla: pnpm add
+  supermoney." en pantalla y en
+  el audio, así que `INSTALL_DUR` subió de 4s a 6s.
+- El beat de React tenía un bug de sincronía: por dentro, el ejemplo de
+  uso (`<InputMoney ... />`) no empezaba a aparecer hasta el frame 300 y
+  la nota final hasta el frame 500, pero `REACT_DUR` solo daba 240 frames
+  (8s) — el `Sequence` cortaba el beat antes de que ese contenido llegara
+  a mostrarse, así que el video saltaba a "showMoney" mientras la
+  narración de React todavía seguía sonando. `REACT_DUR` subió de 8s a
+  17s para cubrir su contenido interno completo.
+- La escena "04 — supermoney" completa pasó de 53s a 58s (+5s), y el
+  video total de 115s a 120s.
 
-**Pendiente:** se agregó una escena nueva `00 — Intro` (12s) *antes* del bug
-original, para plantear el tema desde "qué pasa con el tiempo" antes de
-mostrar el bug puntual de 0.1 + 0.2. Su línea de voz **ya está incluida**
-en el "Texto corrido" de más abajo, pero el audio (`voiceover.mp3`)
-**todavía no se regeneró** con ese texto — sigue siendo la grabación vieja
-de 95.0s, que no tiene esta línea. Además el texto corrido también
-incorporó la corrección de la línea del HTML vanilla (ver nota en esa
-sección). Hasta que se regenere el audio y se reajusten `sceneDurations` /
-`04_Supermoney.tsx` con la nueva duración, el video (113s antes de
-transiciones, 110s reales) no va a cuadrar con el audio actual (95s). Ver
-sección "00 — Intro" y "Texto corrido" más abajo.
+| Beat (dentro de supermoney) | Antes | Ahora | Narración estimada |
+|---|---|---|---|
+| Intro | 4s | 4s | ~3.9s |
+| ATM | 9s | 9s | ~9.1s |
+| HTML vanilla | 11s | 11s | ~10.4s |
+| Instalación pnpm | 4s (sin voz) | **6s (con voz)** | ~2s |
+| React | 8s (desincronizado) | **17s (corregido)** | ~11.3s |
+| showMoney | 2s | 2s | ~1.7s |
+| moneyToString | 4s | 4s | ~3.5s |
+| Límite (MAX_SAFE_INTEGER) | 9s | 9s | ~8.3s |
+| **Total** | **53s** | **58s** | |
 
 ---
 
-## 00 — Intro (0:00 – 0:12, sub-tiempos del guion original recorridos +12s)
+## 00 — Intro (0:01 – 0:13)
 
 > Una suma con decimales, una sola vez, casi no se nota. Pero repetida miles de veces, día tras día, el error se acumula — hasta que ya no puedes ignorarlo.
 
-En pantalla: un fragmento de código (`saldo.js`) que suma 0.10 en un `for`
-durante 3000 "días" (un depósito diario, o cualquier operación recurrente).
-Luego un contador de días avanza rápido y se muestran dos saldos en
-paralelo — el "esperado" (día × 0.10) y el "real" (el resultado de la suma
-en punto flotante) — que empiezan iguales y terminan separados por un
-resto de `~2.8e-13`, visible solo al mostrar todos los decimales. Cierra con
-el texto: *"Una operación así, sola, casi no se nota. Repetida miles de
-veces — con el tiempo — se vuelve un problema real."*
+En pantalla: el código `saldo.js` sumando 0.10 durante 3000 días, luego el
+contador de días corre y dos saldos ("esperado" vs "real") se separan
+visiblemente.
 
----
-
-## 01 — El bug (0:00 – 0:12)
+## 01 — El bug (0:12 – 0:24)
 
 > Escribe en la consola: cero punto uno, más cero punto dos. El resultado no es cero punto tres — trae un cuatro perdido al final. Bienvenido al punto flotante.
 
-## 02 — Por qué pasa (0:12 – 0:28)
+## 02 — Por qué pasa (0:24 – 0:40)
 
 > Las computadoras guardan decimales en binario, y no todos son exactos. Un carrito de tres productos a diecinueve noventa y nueve no da cincuenta y nueve con noventa y siete... da un número con nueves de más. El error se acumula.
 
-## 03 — La solución (0:28 – 0:45)
+## 03 — La solución (0:39 – 0:56)
 
 > La regla de oro: nunca guardes dinero como decimal. Guárdalo como entero, en la unidad más pequeña. Diecinueve noventa y nueve son mil novecientos noventa y nueve centavos. Sumado tres veces: cinco mil novecientos noventa y siete. Exacto, siempre. El decimal es solo presentación.
 
-## 04 — supermoney (0:45 – 1:28)
+## 04 — supermoney (0:56 – 1:49)
 
-### Intro (0:45 – 0:49)
-> Ese principio, en una librería, es super... money. Siempre enteros.
+### Intro (0:56 – 1:00)
+> Ese principio, en una librería, es supermoney. Siempre enteros.
 
-### 1. El input, modo ATM (0:49 – 0:55)
+### 1. El input, modo ATM (1:00 – 1:09)
 > El input funciona como un cajero: cada tecla arma el monto de derecha a izquierda, y entrega el valor en centavos.
 
-### 2. Un solo HTML, sin build (0:55 – 1:03)
+### 2. Un solo HTML, sin build (1:09 – 1:20)
 > No necesitas un bundler ni un paso de build: un HTML, un input, un script por CDN. Funciona en PHP, Django, WordPress, donde sea.
 
-### 3. Instalación con pnpm (1:03 – 1:09)
-> *(sin narración — beat puramente visual)*
->
-> En pantalla: `pnpm add supermoney`, con nota de que también funciona con npm o yarn, y referencia a la documentación completa en `npmjs.com/package/supermoney`. Suena solo la música de fondo durante este tramo; no hay línea de voz asignada. Si en el futuro se regenera el audio y se quiere narrar este beat, una línea corta como *"Con un bundler, se instala con pnpm add supermoney"* cabe en los 6 segundos disponibles.
+En pantalla, el snippet exacto:
+```html
+<!doctype html>
+<html>
+<body>
+  <input type="money" />
+  <script src="https://unpkg.com/supermoney@latest/dist/index.global.js"></script>
+  <script>
+    superMoney.initMoneyInputs();
+  </script>
+</body>
+</html>
+```
 
-### 4. Con React: un componente controlado (1:09 – 1:19)
+### 3. Instalación con pnpm (1:20 – 1:26)
+> Su instalación es muy sencilla: pnpm add supermoney.
+>
+> En pantalla: la frase narrada, luego `pnpm add supermoney`, con nota de
+> que también funciona con npm o yarn.
+
+### 4. Con React: un componente controlado (1:23 – 1:34)
 > Con React, un componente activa ese input y reenvía sus eventos como props: onChangeCents, onMoneyChange. Se usa como cualquier input controlado, y sigue siempre en enteros.
 
-### 5. Mostrarlo formateado — showMoney (1:19 – 1:22)
+En pantalla: `import { InputMoney } from "supermoney";` y el ejemplo de uso
+`<InputMoney id="precio" symbol="$" decimals={2} valueCents={priceCents}
+onChangeCents={setPriceCents} onMoneyChange={...} />`.
+
+### 5. Mostrarlo formateado — showMoney (1:34 – 1:36)
 > showMoney lo muestra formateado.
 
-### 6. El monto en letras — moneyToString (1:22 – 1:25)
+### 6. El monto en letras — moneyToString (1:36 – 1:40)
 > moneyToString lo convierte a letras, para una factura.
 
-### 7. El límite real (1:25 – 1:28)
+### 7. El límite real (1:40 – 1:49)
 > Y el límite real es Number punto MAX_SAFE_INTEGER — donde hasta un entero deja de ser exacto en JavaScript.
 
-## 05 — Cierre (1:28 – 1:35)
+## 05 — Cierre (1:48 – 1:55)
 
-> La regla no es "cuidado con los decimales". Es: no calcules con decimales. Guarda enteros. Super... money.
+> La regla no es "cuidado con los decimales". Es: no calcules con decimales. Guarda enteros. Supermoney.
 
 ---
 
-## Texto corrido (para reusar en ElevenLabs si se regenera el audio)
+## Texto corrido (para pegar en ElevenLabs / TTS)
 
 ```
 Una suma con decimales, una sola vez, casi no se nota. Pero repetida miles de veces, día tras día, el error se acumula — hasta que ya no puedes ignorarlo.
@@ -103,11 +126,13 @@ Las computadoras guardan decimales en binario, y no todos son exactos. Un carrit
 
 La regla de oro: nunca guardes dinero como decimal. Guárdalo como entero, en la unidad más pequeña. Diecinueve noventa y nueve son mil novecientos noventa y nueve centavos. Sumado tres veces: cinco mil novecientos noventa y siete. Exacto, siempre. El decimal es solo presentación.
 
-Ese principio, en una librería, es super... money. Siempre enteros.
+Ese principio, en una librería, es supermoney. Siempre enteros.
 
 El input funciona como un cajero: cada tecla arma el monto de derecha a izquierda, y entrega el valor en centavos.
 
 No necesitas un bundler ni un paso de build: un HTML, un input, un script por CDN. Funciona en PHP, Django, WordPress, donde sea.
+
+Su instalación es muy sencilla: pnpm add supermoney.
 
 Con React, un componente activa ese input y reenvía sus eventos como props: onChangeCents, onMoneyChange. Se usa como cualquier input controlado, y sigue siempre en enteros.
 
@@ -115,39 +140,46 @@ showMoney lo muestra formateado. moneyToString lo convierte a letras, para una f
 
 Y el límite real es Number punto MAX_SAFE_INTEGER — donde hasta un entero deja de ser exacto en JavaScript.
 
-La regla no es "cuidado con los decimales". Es: no calcules con decimales. Guarda enteros. Super... money.
+La regla no es "cuidado con los decimales". Es: no calcules con decimales. Guarda enteros. Supermoney.
 ```
 
-**Nota sobre este bloque:** ya incluye la línea de la escena `00 — Intro`
-al principio (antes solo estaba como propuesta suelta más abajo) y la
-línea del HTML vanilla corregida — "no necesitas un proyecto" se cambió
-porque un HTML con `<script>` sigue siendo un proyecto, solo que sin paso
-de build; y "Rails" se cambió por "Django". Si generás el audio con este
-texto, la duración ya NO va a ser 95.0s — medila con `ffprobe` y seguí los
-pasos de "Si se necesita regenerar el audio" más abajo para redistribuir
-`sceneDurations`.
+**Cambios respecto al guion anterior:**
+- "super... money" (con pausa dramática) → "supermoney" (una sola palabra,
+  sin pausa), tanto en la línea de la escena 04 como en el cierre — para
+  que coincida con cómo se pronuncia en el resto del video y con el nombre
+  real del paquete npm.
+- Se agregaron los tiempos absolutos de cada línea, ya considerando el
+  segundo de aire inicial (`LEAD_IN_DURATION`) y el solape de las 5
+  transiciones crossZoom (0.6s cada una).
+- Se documentó en el beat "2. Un solo HTML" el snippet exacto que aparece
+  ahora en pantalla (CDN de unpkg, `superMoney.initMoneyInputs()`).
+- Se documentó en el beat "4. Con React" que el snippet en pantalla ya no
+  es el wrapper manual de ~115 líneas, sino el import directo `import {
+  InputMoney } from "supermoney"`.
+- Se rebalancearon las duraciones internas de "04 — supermoney" (ver
+  tabla arriba) para que cada beat tenga el tiempo real que necesita su
+  línea narrada, en vez de arrastrar el timing viejo del snippet largo.
+- **Nuevo:** el beat "3. Instalación con pnpm" ganó la línea narrada "Su
+  instalación es muy sencilla." — dejó de ser un beat mudo.
+- **Nuevo:** se corrigió un desincronizado real en el beat "4. Con React":
+  su contenido interno (el ejemplo de uso y la nota final) no cabía en la
+  duración del `Sequence` y se cortaba antes de tiempo. Ver la nota en
+  `04_Supermoney.tsx` y en `theme.ts` para el detalle técnico.
 
+---
 
-## Datos del audio
+## Cómo generar y ajustar el audio
 
-### Voz en off
-- **Archivo:** `public/audio/voiceover.mp3`
-- **Duración:** 95.007313s (95.0s redondeado)
-- **Fuente:** ElevenLabs — voz "Carolina G — Voz femenina versátil Pro" (pvc, stability 100, similarity 98, style 50)
-- **Formato:** MP3, 128 kbps, 44.1 kHz, mono
-- **Volumen:** 100% (voz principal)
-- **Referenciado en código:** `src/MainVideo.tsx`, vía `<Audio src={staticFile("audio/voiceover.mp3")} />`
-
-### Música de fondo
-- **Archivo:** `public/audio/background.mp3`
-- **Duración original:** 161.1s (se recorta a los 95.0s del video mediante un `Sequence`)
-- **Formato:** MP3, 48 kbps, 44.1 kHz, estéreo
-- **Volumen:** 20% fijo, con fade-out de 1s (`BG_FADE_OUT_FRAMES = 30`) en el último segundo del video para no cortar en seco
-- **Referenciado en código:** `src/MainVideo.tsx`, vía `<Audio src={staticFile("audio/background.mp3")} volume={...} />` dentro de un `Sequence` de `totalDuration` frames
-
-## Si se necesita regenerar el audio
-
-1. Copia el bloque "Texto corrido" de arriba tal cual a ElevenLabs.
-2. Genera el audio y anota la duración exacta con `ffprobe -show_entries format=duration archivo.mp3`.
+1. Copia el bloque "Texto corrido" de arriba a tu TTS.
+2. Genera el audio y medí la duración exacta:
+   ```
+   ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 voiceover.mp3
+   ```
 3. Reemplaza `public/audio/voiceover.mp3` con el nuevo archivo.
-4. Si la duración cambió, redistribuye `sceneDurations` en `src/theme.ts` y las constantes `INTRO_DUR/ATM_DUR/HTML_DUR/REACT_DUR/SHOW_DUR/STRING_DUR/LIMIT_DUR` en `src/scenes/04_Supermoney.tsx` proporcionalmente a la nueva duración total (`totalDuration` en `Root.tsx` se recalcula solo, no hace falta tocarlo).
+4. Si la duración final no da exactamente **120s (7200 frames a 60fps)**,
+   redistribuye `sceneDurations` en `src/theme.ts` (y las constantes
+   internas `INTRO_DUR / ATM_DUR / HTML_DUR / INSTALL_DUR / REACT_DUR /
+   SHOW_DUR / STRING_DUR / LIMIT_DUR` en `src/scenes/04_Supermoney.tsx`)
+   proporcionalmente a la nueva duración total. `videoDuration` en
+   `theme.ts` se recalcula solo a partir de `sceneDurations`, no hace
+   falta tocarlo directamente.

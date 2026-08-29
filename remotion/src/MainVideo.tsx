@@ -8,7 +8,13 @@ import { SolucionScene } from "./scenes/03_Solucion";
 import { SupermoneyScene } from "./scenes/04_Supermoney";
 import { CierreScene } from "./scenes/05_Cierre";
 import { crossZoom } from "./transitions/crossZoom";
-import { FPS, TRANSITION_DURATION, sceneDurations, videoDuration } from "./theme";
+import {
+  FPS,
+  LEAD_IN_DURATION,
+  TRANSITION_DURATION,
+  sceneDurations,
+  videoDuration,
+} from "./theme";
 
 /**
  * Video completo: "super-money — dinero sin errores de punto flotante".
@@ -29,6 +35,12 @@ import { FPS, TRANSITION_DURATION, sceneDurations, videoDuration } from "./theme
  * Música de fondo (public/audio/background.mp3) suena por debajo de la voz
  * a volumen fijo del 20%, recortada a la duración total del video con un
  * fade-out corto al final para no cortar en seco.
+ *
+ * LEAD_IN_DURATION (1s, ver theme.ts) es un colchón de negro/silencio antes
+ * de que arranque cualquier cosa — video, voz y música parten todos de
+ * `LEAD_IN_DURATION` en vez de 0, así el primer corte no se siente
+ * apresurado. La duración total de la composición (videoDuration) ya
+ * incluye ese segundo extra.
  */
 const BG_VOLUME = 0.1;
 const BG_FADE_OUT_FRAMES = 1 * FPS; // 1s de fade-out al cierre
@@ -39,69 +51,80 @@ export const MainVideo: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <Audio src={staticFile("audio/voiceover.mp3")} />
-      <Sequence from={0} durationInFrames={videoDuration} layout="none">
+      <Sequence from={LEAD_IN_DURATION} layout="none">
+        <Audio src={staticFile("audio/voiceover.mp3")} />
+      </Sequence>
+      <Sequence
+        from={LEAD_IN_DURATION}
+        durationInFrames={videoDuration - LEAD_IN_DURATION}
+        layout="none"
+      >
         <Audio
           src={staticFile("audio/background.mp3")}
           volume={(f) =>
-            f > videoDuration - BG_FADE_OUT_FRAMES
+            f > videoDuration - LEAD_IN_DURATION - BG_FADE_OUT_FRAMES
               ? BG_VOLUME *
-                Math.max(0, (videoDuration - f) / BG_FADE_OUT_FRAMES)
+                Math.max(
+                  0,
+                  (videoDuration - LEAD_IN_DURATION - f) / BG_FADE_OUT_FRAMES,
+                )
               : BG_VOLUME
           }
         />
       </Sequence>
 
-      <TransitionSeries>
-        <TransitionSeries.Sequence durationInFrames={intro}>
-          <IntroScene />
-        </TransitionSeries.Sequence>
+      <Sequence from={LEAD_IN_DURATION} layout="none">
+        <TransitionSeries>
+          <TransitionSeries.Sequence durationInFrames={intro}>
+            <IntroScene />
+          </TransitionSeries.Sequence>
 
-        <TransitionSeries.Transition
-          presentation={crossZoom()}
-          timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
-        />
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
 
-        <TransitionSeries.Sequence durationInFrames={hook}>
-          <HookScene />
-        </TransitionSeries.Sequence>
+          <TransitionSeries.Sequence durationInFrames={hook}>
+            <HookScene />
+          </TransitionSeries.Sequence>
 
-        <TransitionSeries.Transition
-          presentation={crossZoom()}
-          timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
-        />
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
 
-        <TransitionSeries.Sequence durationInFrames={explicacion}>
-          <ExplicacionScene />
-        </TransitionSeries.Sequence>
+          <TransitionSeries.Sequence durationInFrames={explicacion}>
+            <ExplicacionScene />
+          </TransitionSeries.Sequence>
 
-        <TransitionSeries.Transition
-          presentation={crossZoom()}
-          timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
-        />
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
 
-        <TransitionSeries.Sequence durationInFrames={solucion}>
-          <SolucionScene />
-        </TransitionSeries.Sequence>
+          <TransitionSeries.Sequence durationInFrames={solucion}>
+            <SolucionScene />
+          </TransitionSeries.Sequence>
 
-        <TransitionSeries.Transition
-          presentation={crossZoom()}
-          timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
-        />
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
 
-        <TransitionSeries.Sequence durationInFrames={supermoney}>
-          <SupermoneyScene />
-        </TransitionSeries.Sequence>
+          <TransitionSeries.Sequence durationInFrames={supermoney}>
+            <SupermoneyScene />
+          </TransitionSeries.Sequence>
 
-        <TransitionSeries.Transition
-          presentation={crossZoom()}
-          timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
-        />
+          <TransitionSeries.Transition
+            presentation={crossZoom()}
+            timing={linearTiming({ durationInFrames: TRANSITION_DURATION })}
+          />
 
-        <TransitionSeries.Sequence durationInFrames={cierre}>
-          <CierreScene />
-        </TransitionSeries.Sequence>
-      </TransitionSeries>
+          <TransitionSeries.Sequence durationInFrames={cierre}>
+            <CierreScene />
+          </TransitionSeries.Sequence>
+        </TransitionSeries>
+      </Sequence>
     </AbsoluteFill>
   );
 };

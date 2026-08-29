@@ -11,7 +11,7 @@ const codeExamples = [
           {'<script '}
           <span className="text-sky-400">src</span>
           {'='}
-          <span className="text-emerald-400">"https://unpkg.com/supermoney@latest/dist/index.js"</span>
+          <span className="text-emerald-400">"https://unpkg.com/supermoney@latest/dist/index.global.js"</span>
           {'></script>'}
         </p>
         <br />

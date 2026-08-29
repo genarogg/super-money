@@ -4,7 +4,7 @@ Input de dinero para la web. Modo ATM. Sin errores de punto flotante.
 
 ## Características
 
-- ✅ **Store as integer, display as decimal: evita errores de punto flotante
+- ✅ **Store as integer, display as decimal**: evita errores de punto flotante
 - ✅ Modo ATM: escribe de derecha a izquierda
 - ✅ Soporte para múltiples monedas y decimales
 - ✅ Funciona con inputs dinámicos
@@ -19,10 +19,17 @@ pnpm add supermoney
 
 ### 1. Inicializar la librería
 
+En un proyecto con bundler (Vite, Webpack, Next, etc.):
+
 ```typescript
 import { initMoneyInputs } from 'supermoney';
+
 initMoneyInputs();
 ```
+
+> Si no usas un bundler y quieres cargar la librería directo en un HTML,
+> usa `<script type="module">` con `import` desde un CDN — mira el
+> "Ejemplo completo" más abajo.
 
 ### 2. Usar en HTML
 

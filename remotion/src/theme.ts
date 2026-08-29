@@ -47,25 +47,30 @@ export const fonts = {
 // en números de frame fijos, que se escalaron x2 en cada archivo de escena)
 export const FPS = 60;
 
-// Duraciones ajustadas al audio real del voice-over generado en ElevenLabs
-// (voiceover.mp3, 95.0s exactos). El beat de instalación por pnpm
-// (InstallBeat, dentro de la escena supermoney) es puramente visual y no
-// tiene línea de voz propia — se le restó tiempo a otros beats con margen
-// (AtmBeat, LimitBeat) para que la escena siga sumando 43s y todo el video
-// se mantenga sincronizado con los 95.0s del audio. Ver
-// guion-supermoney.md para el texto narrado tramo por tramo.
+// Duraciones ajustadas al audio real del voice-over generado en ElevenLabs.
+// Ver guion-supermoney.md para el texto narrado tramo por tramo y el
+// texto corrido listo para regenerar el audio.
 //
-// NOTA: supermoney se extendió a 49s (antes 43s) para dar tiempo al scroll
-// del snippet completo de MoneyInput.tsx en el beat de React (+6s). Además
-// se agregó la escena `intro` (+12s, sin línea de voz propia todavía). El
-// video total ya no coincide con los 95.0s del voiceover.mp3 actual —
-// pendiente regenerar/editar el audio para que cuadre con los nuevos 113s.
+// NOTA: supermoney se reajustó de 53s a 58s. Dos causas:
+//   1. El beat de instalación con pnpm dejó de ser mudo: ahora lleva la
+//      línea "su instalación es muy sencilla..." narrada, así que
+//      INSTALL_DUR pasó de 4s a 6s (antes era un beat puramente visual
+//      sin voz, ver guion-supermoney.md).
+//   2. El beat de React estaba desincronizado: por dentro, el
+//      <InputMoney /> no aparecía hasta el frame 300 y la nota final hasta
+//      el 500, pero REACT_DUR solo daba 240 frames (8s) — el Sequence
+//      cortaba el beat antes de que ese contenido llegara a mostrarse, y
+//      el video saltaba a "showMoney" mientras la narración de React
+//      seguía sonando. REACT_DUR subió de 8s a 17s para cubrir su propio
+//      contenido interno completo.
+// (ver INTRO_DUR..LIMIT_DUR en 04_Supermoney.tsx para el detalle de cada
+// sub-beat)
 export const sceneDurations = {
   intro: 12 * FPS, // NUEVA — el mismo error, repetido con el tiempo (3000 días de 0.10)
   hook: 12 * FPS, // 0:00 - 0:12 → gancho: 0.1 + 0.2
   explicacion: 16 * FPS, // problema explicado + ejemplo del carrito
   solucion: 17 * FPS, // guardar todo en enteros
-  supermoney: 49 * FPS, // qué es supermoney: input, HTML vanilla, instalación pnpm, integración React (con scroll del archivo completo), showMoney, moneyToString, límite
+  supermoney: 58 * FPS, // qué es supermoney: input, HTML vanilla, instalación pnpm (con voz), integración React (import { InputMoney } from "supermoney"), showMoney, moneyToString, límite — timing por beat recalculado a la narración real
   cierre: 7 * FPS, // cierre
 } as const;
 
@@ -85,8 +90,14 @@ export const totalDuration = Object.values(sceneDurations).reduce(
 export const TRANSITION_DURATION = 36;
 const TRANSITION_COUNT = Object.keys(sceneDurations).length - 1;
 
+// 1s de aire al inicio, antes de que arranque cualquier imagen o sonido.
+// Sin esto el video (y la voz) entran en el frame 0 exacto, lo cual se
+// siente apresurado al reproducir — un segundo de negro/silencio le da al
+// espectador un respiro antes del primer corte.
+export const LEAD_IN_DURATION = 1 * FPS;
+
 // Duración real de la composición ya con el solape de las transiciones
 // descontado — es lo que debe usar <Composition durationInFrames> en
 // Root.tsx y lo que debe cubrir el audio de fondo en MainVideo.tsx.
 export const videoDuration =
-  totalDuration - TRANSITION_COUNT * TRANSITION_DURATION;
+  LEAD_IN_DURATION + totalDuration - TRANSITION_COUNT * TRANSITION_DURATION;
